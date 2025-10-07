@@ -1,0 +1,12 @@
+:root {
+  --color-primary: #fff;
+  --color-background: #181818;
+  --color-textPrimary: #fff;
+  --color-textSecondary: rgb(255,255,255, 0.60);
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --radius-md: 12px;
+  --font-base: Inter, sans-serif;
+  --font-heading: Poppins, sans-serif;
+}
