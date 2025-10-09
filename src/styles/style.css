@@ -1,17 +1,56 @@
 :root {
     --color-primary: #fff;
     --color-background: #181818;
+    --color-secondaryBackground: rgb(255, 255, 255, 0.05);
+    --color-secondaryBackgroundHover: rgb(61, 61, 61);
+    --color-cardsBackground: rgb(255, 255, 255, 0.03);
+    --color-cardsActiveBackground: rgb(255, 255, 255, 0.10);
+    --color--columnsBackground: #1C1C1C;
+    --color-linksBackground: #312EB5;
     --color-textPrimary: #fff;
     --color-textSecondary: rgb(255,255,255, 0.60);
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 2rem;
     --radius-md: 12px;
-    --font-base: Inter, sans-serif;
+    --font-base: "Source Sans 3", sans-serif;;
     --font-heading: Poppins, sans-serif;
 }
 
 body {
     background-color: var(--color-background);
     color: var(--color-textPrimary);
+    font-family: var(--font-base);
+}
+.btn{
+    background-color: var(--color-secondaryBackground);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.btn:hover{
+    background-color: #312EB5;
+    color: var(--color-primary);
+    transition: all 0.3s ease-in-out;
+}
+li, h3, .nav-items{
+    font-weight: 700;
+    font-size: 18px;
+}
+.card{
+    background-color: var(--color-cardsBackground);
+    border-radius: var(--radius-sm);
+}
+.card:hover{
+    background-color: var(--color-secondaryBackgroundHover);
+    transition: all 0.3s ease-in-out;
+}
+.card.active{
+    background-color: var(--color-cardsActiveBackground);
+}
+.card p{
+    color: var(--color-textSecondary);
+}
+.card p span{
+    color: rgb(255, 255, 255, 0.4);
 }
