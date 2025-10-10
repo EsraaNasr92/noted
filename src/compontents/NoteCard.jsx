@@ -1,6 +1,7 @@
 import data from '../data/data.json';
 import NoteEditor from './NoteEditor';
 
+// Card details based on based card ID from NoteList component "add state and props in App.jsx"
 export default function NoteCard({selectedID}) {
 
     if (!selectedID) return <p className="text-gray-400">Select a note...</p>;

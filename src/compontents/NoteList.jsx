@@ -1,9 +1,11 @@
 import data from '../data/data.json';
 
+// List of notes in the middle section
 export default function NoteList({ selectedID, setSelectedID }){
     return(
         <div>
             <div className="space-y-2 p-4 pt-0">
+                {/* Retrive data from JSON file */}
                 {data.cards.map(card => (
                     <div
                         key={card.id}
