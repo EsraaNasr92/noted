@@ -1,0 +1,48 @@
+{
+    "cards":[
+        {
+            "id" : 1,
+            "title": "Reflection on the Month of June",
+            "date": "21/6/2025",
+            "folder": "work",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+        },
+        {
+            "id" : 2,
+            "title": "Project proposal",
+            "date": "30/3/2022",
+            "folder": "work",
+            "description":[
+                "array Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            ]
+        },
+        {
+            "id" : 3,
+            "title": "Travel Itinerary",
+            "date": "10/8/2022",
+            "folder": "events",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+
+        },
+        {
+            "id" : 4,
+            "title": "Project proposal",
+            "date": "26/4/2022",
+            "folder": "Finances",
+            "description":[
+                "array Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            ]
+        }
+    ],
+    "folders":[
+        {"id": 1, "title": "Personal"},
+        {"id": 2, "title": "Work"},
+        {"id": 2, "title": "Events"},
+        {"id": 2, "title": "Travel"},
+        {"id": 2, "title": "Finances"}
+    ]
+
+    
+}
