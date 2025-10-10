@@ -2,18 +2,23 @@ import { useState } from 'react';
 import Header from './compontents/Header';
 import NoteCard from './compontents/NoteCard';
 import NoteList from './compontents/NoteList';
+import data from "./data/data.json";
 import Folder from './sidebar/Folders';
 import MoreOptions from './sidebar/MoreOptions';
 import Recents from './sidebar/Recents';
 
 export default function App() {
     const [selectedID, setSelectedID] = useState(null);
+    const [notes, setNotes] = useState(data.cards);
 
     return (
         <div className="h-screen text-white">
             <div className="grid grid-cols-[19rem_minmax(0,1fr)_minmax(0,3fr)] h-full">
                 <div className="border-r border-gray-700 flex flex-col">
-                    <Header />
+                    <Header
+                        notes={notes}
+                        setNotes={setNotes}
+                    />
                     <Recents />
                     <Folder />
                     <MoreOptions />
@@ -22,10 +27,16 @@ export default function App() {
                     <div className="p-4 sticky top-0 z-10">
                         <h2 className="text-xl font-semibold">Personal</h2>
                     </div>
-                    <NoteList selectedID={selectedID} setSelectedID={setSelectedID} />
+                    <NoteList
+                        selectedID={selectedID}
+                        setSelectedID={setSelectedID}
+                        notes={notes}
+                    />
                 </div>
                 <div className="overflow-y-auto p-8">
-                    <NoteCard selectedID={selectedID}/>
+                    <NoteCard
+                        selectedID={selectedID}
+                    />
                 </div>
 
             </div>
