@@ -1,8 +1,12 @@
 import data from '../data/data.json';
 import NoteEditor from './NoteEditor';
 
-export default function NoteCard() {
-    const card = data.cards.find((c) => c.id === 1);
+export default function NoteCard({selectedID}) {
+
+    if (!selectedID) return <p className="text-gray-400">Select a note...</p>;
+
+    const card = data.cards.find((c) => c.id === selectedID);
+    if (!card) return <p>Note not found</p>;
 
     return (
         <>
@@ -36,7 +40,6 @@ export default function NoteCard() {
 
                     <hr />
 
-                    {/* Folder section */}
                     <div className="flex items-center mt-4">
                         <svg
                             className="w-6 h-6 text-gray-400 dark:text-white"
@@ -65,10 +68,11 @@ export default function NoteCard() {
 
             <NoteEditor />
 
-            {/* Description section */}
+    
             <div className="prose prose-invert max-w-none text-lg mt-6">
                 <p>{card.description}</p>
             </div>
+
         </>
     );
 }
