@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // folder section in sidebar
-export default function Folder({ folders, setFolders }){
+export default function Folder({ folders, setFolders, setSelectedFolder }){
     
     const [newFolder, setNewFolder] = useState("");
     const [showInput, setShowInput] = useState(false)
@@ -55,7 +55,11 @@ export default function Folder({ folders, setFolders }){
             {/* Retrive data from JSON file */}
             <ul className="space-y-1">
                 {folders.map(folder => (
-                    <li key={folder.id} className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4">
+                    <li
+                        key={folder.id}
+                        onClick={() => setSelectedFolder(folder.title)}
+                        className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    >
                         <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"/>
                         </svg>{folder.title}

@@ -1,25 +1,33 @@
-
 // List of notes in the middle section
-export default function NoteList({ selectedID, setSelectedID, notes }){
-    return(
+export default function NoteList({ selectedID, setSelectedID, notes, selectedFolder }) {
+    const filteredNotes =
+        selectedFolder === "All"
+            ? notes
+            : notes.filter(note => note.folder === selectedFolder);
+
+    return (
         <div>
             <div className="space-y-2 p-4 pt-0">
-                {notes.map(card => (
-                    <div
-                        key={card.id}
-                        className={`p-5 mb-5 cursor-pointer card ${
-                            selectedID === card.id ? 'bg-gray-700' : ''
-                        }`}
-                        onClick={() => setSelectedID(card.id)}
-                    >
-                        <h3 className="font-semibold mb-3">{card.title}</h3>
-                        <p className="text-gray-400 truncate">
-                            <span className="pr-2">{card.date || ''}</span>
-                            {card.description || ''}
-                        </p>
-                    </div>
-                ))}
+                {filteredNotes.length > 0 ? (
+                    filteredNotes.map(card => (
+                        <div
+                            key={card.id}
+                            className={`p-5 mb-5 cursor-pointer card ${
+                                selectedID === card.id ? "bg-gray-700" : ""
+                            }`}
+                            onClick={() => setSelectedID(card.id)}
+                        >
+                            <h3 className="font-semibold mb-3">{card.title}</h3>
+                            <p className="text-gray-400 truncate">
+                                <span className="pr-2">{card.date || ""}</span>
+                                {card.description || ""}
+                            </p>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500 px-4">No notes found in this folder.</p>
+                )}
             </div>
         </div>
-    )
+    );
 }

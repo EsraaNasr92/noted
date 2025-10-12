@@ -11,6 +11,7 @@ export default function App() {
     const [selectedID, setSelectedID] = useState(null);
     const [notes, setNotes] = useState(data.cards);
     const [folders, setFolders] = useState(data.folders);
+    const [selectedFolder, setSelectedFolder] = useState("All"); // current folder
 
     return (
         <div className="h-screen text-white">
@@ -26,6 +27,7 @@ export default function App() {
                     <Folder
                         folders={folders}
                         setFolders={setFolders}
+                        setSelectedFolder={setSelectedFolder}
                     />
                     <MoreOptions />
                 </div>
@@ -37,6 +39,7 @@ export default function App() {
                         selectedID={selectedID}
                         setSelectedID={setSelectedID}
                         notes={notes}
+                        selectedFolder={selectedFolder}
                     />
                 </div>
                 <div className="overflow-y-auto p-8">
