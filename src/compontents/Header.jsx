@@ -1,34 +1,57 @@
 import { useState } from "react";
 
-export default function Header( { notes, setNotes } ){
-    const [newNote, setNewNote] = useState("");
-    const [description, setDescription] = useState("");
-    const [date, setDate] = useState("");
-    const [showModal, setShowModal] = useState(false);
+export default function Header( { notes, setNotes, folders } ){
+    const [newNote, setNewNote] = useState({
+        title: "",
+        description: "",
+        date: "",
+        folder: "",
+    });
+    const [showAddNote, setShowAddNote] = useState(false);
+    const [errors, setErrors] = useState(""); // For error message.
 
+    // For add new note validation
+    const validateFields = () => {
+        const newErrors = {};
+        if (!newNote.title.trim()) newErrors.title = "Title is required.";
+        if (!newNote.description.trim()) newErrors.description = "Description is required.";
+        if (!newNote.date.trim()) newErrors.date = "Please select a date.";
+        if (!newNote.folder.trim()) newErrors.folder = "Please choose a folder.";
+        return newErrors;
+    }
+
+    // add new note function
     const addNewNote = () => {
-        console.log("New note title:", newNote);
+        const validationErrors = validateFields();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
 
-        if (!newNote.trim()) return; // To prevent empty input
+        setErrors({}); // clear error and add note
 
         const newCardObj = {
             id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1, // auto-generate id
-            title: newNote.trim(),
-            description: description.trim(),
-            date: date || new Date().toISOString().split("T")[0] // default to today's date
+            title: newNote.title.trim(),
+            description: newNote.description.trim(),
+            date: newNote.date || new Date().toISOString().split("T")[0], // default to today's date
+            folder: newNote.folder
         };
         setNotes([...notes, newCardObj]);
-        setShowModal(false);
-        setNewNote("");
-        setNewDescription("");
-        setNewDate("")
+        setNewNote({ title: "", description: "", date: "", folder: "" });
+        setShowAddNote(false);
     }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewNote((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" })); // clear error as user types
+    };
+
     return(
         <>
             <div className="flex justify-between items-center mt-6">
-                <h1 className="flex text-xl font-bold px-4">Noted
-
-                </h1>
+                <h1 className="flex text-xl font-bold px-4">Noted</h1>
                 <div className="search pr-5 cursor-pointer">
                     <svg className="w-6 h-6 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
@@ -37,7 +60,7 @@ export default function Header( { notes, setNotes } ){
             </div>
             <button
                 className="flex items-center justify-center p-3  my-7 rounded-sm transition duration-150 btn"
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowAddNote(true)}
                 type="button"
             >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -45,15 +68,18 @@ export default function Header( { notes, setNotes } ){
             </button>
 
             {/* Show modal to add new note */}
-            {showModal &&(
+            {showAddNote &&(
                 <div className="fixed inset-0 bg-black flex justify-center items-center z-50">
-                    <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-100">
+                    <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-150">
                         <h2 className="text-lg font-semibold mb-4 text-white">Add New Note</h2>
                         <input
-                            value={newNote}
-                            onChange={(e) => setNewNote(e.target.value)}
-                            placeholder="Add your new note"
-                            className="w-full p-2 mb-4 border border-gray-600 bg-gray-700 text-white rounded"
+                            name="title"
+                            value={newNote.title}
+                            onChange={handleChange}
+                            placeholder="Note title"
+                            className={`w-full p-2 border rounded mb-4 ${
+                                errors.title ? "border-red-500" : "border-gray-600"
+                            } bg-gray-700 text-white`}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {
                                     e.preventDefault();
@@ -62,23 +88,53 @@ export default function Header( { notes, setNotes } ){
                             }}
                             required
                         />
+                        {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
                         <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Add a description"
-                            className="w-full p-2 mb-4 border border-gray-600 bg-gray-700 text-white rounded"
+                            name="description"
+                            value={newNote.description}
+                            onChange={handleChange}
+                            placeholder="Note description"
+                            className={`w-full p-2 border rounded mb-4 ${
+                                errors.description ? "border-red-500" : "border-gray-600"
+                            } bg-gray-700 text-white`}
                             rows="3"
                         />
-
+                        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
                         <input
+                            name="date"
                             type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            className="w-full p-2 mb-4 border border-gray-600 bg-gray-700 text-white rounded"
+                            value={newNote.date}
+                            onChange={handleChange}
+                            className={`w-full p-2 border rounded mb-4 ${
+                                errors.date ? "border-red-500" : "border-gray-600"
+                            } bg-gray-700 text-white`}
                         />
+                        {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
+                        <select
+                            name="folder"
+                            value={newNote.folder}
+                            id="folder"
+                            onChange={handleChange}
+                            className={`w-full p-2 border rounded mb-4 ${
+                                errors.folder ? "border-red-500" : "border-gray-600"
+                            } bg-gray-700 text-white`}
+                            defaultValue=""
+                        >
+                            <option value="" disabled>
+                                Select folder
+                            </option>
+                            {folders.map(folder => (
+                                <option key={folder.id}>{folder.title}</option>
+                            ))}
+                        </select>
+                        {errors.folder && <p className="text-red-500 text-sm">{errors.folder}</p>}
                         <div className="flex justify-end gap-3">
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => {
+                                    setShowAddNote(false);
+                                    setNewNote({ title: "", description: "", date: "", folder: ""});// reset inputs
+                                    setErrors({}); // clear error
+                                }}
                                 className="text-gray-400 hover:text-gray-200"
                             >
                                 Cancel

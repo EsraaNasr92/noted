@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import data from '../data/data.json';
 
 // folder section in sidebar
-export default function Folder(){
-    const [folders, setFolders] = useState(data.folders)
+export default function Folder({ folders, setFolders }){
+    
     const [newFolder, setNewFolder] = useState("");
-    const [showModal, setShowModal] = useState(false)
+    const [showInput, setShowInput] = useState(false)
 
     const addNewFolder = () => {
         if (!newFolder.trim()) return; // To prevent empty input
@@ -14,7 +13,7 @@ export default function Folder(){
             title: newFolder.trim()
         };
         setFolders([...folders, newFolderObj]);
-        setShowModal(false)
+        setShowInput(false)
         setNewFolder("");
     }
 
@@ -23,7 +22,7 @@ export default function Folder(){
             <h3 className="flex items-center justify-between text-md text-gray-400 mb-5 px-4">Folders
                 <button
                     className='bg-transparent hover:bg-transparent cursor-pointer'
-                    onClick={() => setShowModal(true)} // to get addNewFolder and open Modal
+                    onClick={() => setShowInput(true)} // to get addNewFolder and open Modal
                     type="button"
                 >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -32,51 +31,37 @@ export default function Folder(){
                     </svg>
                 </button>
             </h3>
-            {/* Show Modal to add new folder */}
-            {showModal &&(
-                <div className="fixed inset-0 bg-black flex justify-center items-center z-50">
-                    <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-100">
-                        <h2 className="text-lg font-semibold mb-4 text-white">Add New Folder</h2>
-                        <input
-                            value={newFolder}
-                            onChange={(e) => setNewFolder(e.target.value)}
-                            placeholder="Folder name"
-                            className="w-full p-2 mb-4 border border-gray-600 bg-gray-700 text-white rounded"
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    e.preventDefault();
-                                    addNewFolder();
-                                }
-                            }}
-                            required
-                        />
-                        <div className="flex justify-end gap-3">
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="text-gray-400 hover:text-gray-200"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={addNewFolder}
-                                className="bg-blue-600 px-3 py-1 rounded text-white hover:bg-blue-700"
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </div>
+            {/* Show input to add new folder */}
+            {showInput &&(
+                <div className='flex gap-2 py-2 px-4'>
+                    <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"/>
+                    </svg>
+                    <input
+                    value={newFolder}
+                    onChange={(e) => setNewFolder(e.target.value)}
+                    placeholder="Folder name"
+                    className="w-full p-1 mb-4 border-gray-600 bg-gray-700 text-white rounded bg-transparent outline-none"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            addNewFolder();
+                        }
+                    }}
+                    required
+                />
                 </div>
             )}
             {/* Retrive data from JSON file */}
-            {folders.map(folder => (
-                <ul className="space-y-1">
+            <ul className="space-y-1">
+                {folders.map(folder => (
                     <li key={folder.id} className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4">
                         <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"/>
                         </svg>{folder.title}
                     </li>
-                </ul>
-            ))}
+                ))}
+            </ul>
         </div>
     )
 }

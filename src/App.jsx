@@ -10,6 +10,7 @@ import Recents from './sidebar/Recents';
 export default function App() {
     const [selectedID, setSelectedID] = useState(null);
     const [notes, setNotes] = useState(data.cards);
+    const [folders, setFolders] = useState(data.folders);
 
     return (
         <div className="h-screen text-white">
@@ -18,9 +19,14 @@ export default function App() {
                     <Header
                         notes={notes}
                         setNotes={setNotes}
+                        folders={folders}
+                        setFolders={setFolders}
                     />
                     <Recents />
-                    <Folder />
+                    <Folder
+                        folders={folders}
+                        setFolders={setFolders}
+                    />
                     <MoreOptions />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">

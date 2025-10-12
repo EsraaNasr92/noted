@@ -11,7 +11,7 @@ export default function NoteCard({selectedID}) {
 
     return (
         <>
-            <div className="mb-8" id={card.id}>
+            <div className="mb-8" key={card.id}>
                 <h2 className="text-3xl font-bold mb-8">{card.title}</h2>
 
                 <div className="space-x-4 text-gray-400">

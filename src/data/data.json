@@ -39,9 +39,9 @@
     "folders":[
         {"id": 1, "title": "Personal"},
         {"id": 2, "title": "Work"},
-        {"id": 2, "title": "Events"},
-        {"id": 2, "title": "Travel"},
-        {"id": 2, "title": "Finances"}
+        {"id": 3, "title": "Events"},
+        {"id": 4, "title": "Travel"},
+        {"id": 5, "title": "Finances"}
     ]
 
     
