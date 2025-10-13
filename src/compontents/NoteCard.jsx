@@ -4,7 +4,15 @@ import NoteEditor from './NoteEditor';
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
 export default function NoteCard({selectedID}) {
 
-    if (!selectedID) return <p className="text-gray-400">Select a note...</p>;
+    if (!selectedID) return (
+        <div className="flex flex-col items-center justify-center h-full text-center">
+            <svg className="w-25 h-25 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+            </svg>
+            <h1 className='text-[28px] font-semibold mb-2 text-white'>Select a note to view</h1>
+            <p className='text-[20px] text-[var(--color-textSecondary)]'>Choose a note from the list on the left to view its contents, or create a <br /> new note to add to your collection.</p>
+        </div>
+    );
 
     const card = data.cards.find((c) => c.id === selectedID);
     if (!card) return <p>Note not found</p>;
