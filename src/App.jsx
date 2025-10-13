@@ -50,6 +50,9 @@ export default function App() {
                 <div className="overflow-y-auto p-8">
                     <NoteCard
                         selectedID={selectedID}
+                        setSelectedID={setSelectedID}
+                        setNotes={setNotes}
+                        notes={notes}
                     />
                 </div>
 
