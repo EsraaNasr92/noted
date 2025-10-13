@@ -10,13 +10,15 @@ export default function NoteList({ selectedID, setSelectedID, notes, selectedFol
             <div className="space-y-2 p-4 pt-0">
                 {filteredNotes.length > 0 ? (
                     filteredNotes.map(card => (
-                        <div
-                            key={card.id}
-                            className={`p-5 mb-5 cursor-pointer card ${
-                                selectedID === card.id ? "bg-gray-700" : ""
-                            }`}
-                            onClick={() => setSelectedID(card.id)}
-                        >
+                            <div
+                                key={card.id}
+                                className={`p-5 mb-5 cursor-pointer  transition-colors duration-150 ${
+                                    selectedID === card.id
+                                    ? "bg-[var(--color-cardsActiveBackground)] text-white"
+                                    : "bg-[var(--color-cardsBackground)] text-white hover:bg-[var(--color-secondaryBackgroundHover)]"
+                                }`}
+                                onClick={() => setSelectedID(card.id)}
+                            >
                             <h3 className="font-semibold mb-3">{card.title}</h3>
                             <p className="text-gray-400 truncate">
                                 <span className="pr-2">{card.date || ""}</span>

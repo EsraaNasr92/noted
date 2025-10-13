@@ -28,12 +28,17 @@ export default function App() {
                         folders={folders}
                         setFolders={setFolders}
                         setSelectedFolder={setSelectedFolder}
+                        selectedFolder={selectedFolder}
                     />
                     <MoreOptions />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
                     <div className="p-4 sticky top-0 z-10">
-                        <h2 className="text-xl font-semibold">Personal</h2>
+                        <h2 className="text-xl font-semibold">
+                        {selectedFolder === "All"
+                            ? "All Notes"
+                            : folders.find((folder) => folder.title === selectedFolder)?.title || "Folder not found"}
+                        </h2>
                     </div>
                     <NoteList
                         selectedID={selectedID}
