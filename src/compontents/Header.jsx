@@ -9,7 +9,31 @@ export default function Header( { notes, setNotes, folders } ){
     });
     const [showAddNote, setShowAddNote] = useState(false);
     const [errors, setErrors] = useState(""); // For error message.
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchQuery, setSearchQuery]= useState("");
+    const[allNotes, setAllNotes]= useState(notes); // Store original list for a search
 
+    // Show/hidden search input
+    const toggleSearch = () => {
+        setShowSearch((prev) => !prev);
+        setSearchQuery("");
+        setNotes(allNotes);
+    }
+
+    // Search function
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+
+        if(!value.trim()){
+            setNotes(allNotes);
+            return;
+        }
+        const filtered = allNotes.filter((note) =>
+            note.title.toLowerCase().includes(value.toLowerCase())
+        );
+        setNotes(filtered);
+    }
     // For add new note validation
     const validateFields = () => {
         const newErrors = {};
@@ -53,11 +77,38 @@ export default function Header( { notes, setNotes, folders } ){
             <div className="flex justify-between items-center mt-6">
                 <h1 className="flex text-xl font-bold px-4">Noted</h1>
                 <div className="search pr-5 cursor-pointer">
-                    <svg className="w-6 h-6 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
-                    </svg>
+                    <button
+                        className="cursor-pointer"
+                        name="search"
+                        id="search"
+                        onClick={toggleSearch}
+                        type="button">
+                        <svg className="w-6 h-6 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
+            {showSearch &&(
+                <input
+                    className="bg-[var(--color-secondaryBackground)] mt-5 p-2 focus:outline-none"
+                    name="searchInput"
+                    id="searchInput"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    placeholder="Search note"
+                    onKeyDown={(e) => {
+                        if(e.key == "Enter"){
+                            e.preventDefault();
+                        }
+                    }}
+                />
+            )}
+            {searchQuery && (
+                <p className="mt-2 text-[var(--color-textSecondary)]">
+                🔍 Searching for: <span className="font-semibold">{searchQuery}</span>
+                </p>
+            )}
             <button
                 className="flex items-center justify-center p-3  my-7 rounded-sm transition duration-150 btn"
                 onClick={() => setShowAddNote(true)}
