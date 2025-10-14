@@ -1,9 +1,17 @@
 // List of notes in the middle section
-export default function NoteList({ selectedID, setSelectedID, notes, selectedFolder }) {
-    const filteredNotes =
+export default function NoteList({ selectedID, setSelectedID, notes, selectedFolder, showFavorites }) {
+/*     const filteredNotes =
         selectedFolder === "All"
             ? notes
-            : notes.filter(note => note.folder === selectedFolder);
+            : notes.filter(note => note.folder === selectedFolder); */
+
+    let filteredNotes = notes;
+
+    if (showFavorites) {
+        filteredNotes = notes.filter(note => note.isFavorite);
+    } else if (selectedFolder !== "All") {
+        filteredNotes = notes.filter(note => note.folder === selectedFolder);
+    }
 
     return (
         <div>

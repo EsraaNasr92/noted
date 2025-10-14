@@ -12,6 +12,7 @@ export default function App() {
     const [notes, setNotes] = useState(data.cards);
     const [folders, setFolders] = useState(data.folders);
     const [selectedFolder, setSelectedFolder] = useState("All"); // current folder
+    const [showFavorites, setShowFavorites] = useState(false);
 
     return (
         <div className="h-screen text-white">
@@ -27,10 +28,16 @@ export default function App() {
                     <Folder
                         folders={folders}
                         setFolders={setFolders}
-                        setSelectedFolder={setSelectedFolder}
+                        setSelectedFolder={(folder) =>{
+                            setSelectedFolder(folder);
+                            setShowFavorites(false) // reset favorite mode
+                        }}
                         selectedFolder={selectedFolder}
                     />
-                    <MoreOptions />
+                    <MoreOptions
+                        setShowFavorites={setShowFavorites}
+                        setSelectedFolder={setSelectedFolder}
+                    />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
                     <div className="p-4 sticky top-0 z-10">
@@ -45,6 +52,8 @@ export default function App() {
                         setSelectedID={setSelectedID}
                         notes={notes}
                         selectedFolder={selectedFolder}
+                        setShowFavorites={setShowFavorites}
+                        showFavorites={showFavorites}
                     />
                 </div>
                 <div className="overflow-y-auto p-8">
