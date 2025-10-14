@@ -13,6 +13,7 @@ export default function App() {
     const [folders, setFolders] = useState(data.folders);
     const [selectedFolder, setSelectedFolder] = useState("All"); // current folder
     const [showFavorites, setShowFavorites] = useState(false);
+    const [showArchive, setShowArchive]= useState(false);
 
     return (
         <div className="h-screen text-white">
@@ -30,13 +31,15 @@ export default function App() {
                         setFolders={setFolders}
                         setSelectedFolder={(folder) =>{
                             setSelectedFolder(folder);
-                            setShowFavorites(false) // reset favorite mode
+                            setShowFavorites(false); // reset favorite mode
+                            setShowArchive(false); // reset archive mood
                         }}
                         selectedFolder={selectedFolder}
                     />
                     <MoreOptions
                         setShowFavorites={setShowFavorites}
                         setSelectedFolder={setSelectedFolder}
+                        setShowArchive={setShowArchive}
                     />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
@@ -54,6 +57,8 @@ export default function App() {
                         selectedFolder={selectedFolder}
                         setShowFavorites={setShowFavorites}
                         showFavorites={showFavorites}
+                        setShowArchive={setShowArchive}
+                        showArchive={showArchive}
                     />
                 </div>
                 <div className="overflow-y-auto p-8">

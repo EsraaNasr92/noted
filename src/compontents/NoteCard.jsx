@@ -7,9 +7,13 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
     const [showOptions, setShowOptions] = useState(false);
     const dropdownRef = useRef(null);
     const [isFavorite, setIsFavorite] = useState(card?.isFavorite || false);
+    const [isArchive, setIsArchive] = useState(card?.isArchive || false);
     
     useEffect(() => {
-        if(card) setIsFavorite(card.isFavorite || false);
+        if(card) {
+            setIsFavorite(card.isFavorite || false);
+            setIsArchive(card.isArchive || false);
+        }
     }, [card]);
 
     // close dropdown menu when clicking outside
@@ -54,6 +58,21 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
         setShowOptions(false);
     }
 
+    // handle add to favorite
+    const handleAddToArchive = () =>{
+        const updatedNotes = notes.map(note =>
+            note.id === selectedID
+            ?{...note, isArchive: !note.isArchive} // Toggle
+            :note
+        );
+        setNotes(updatedNotes);
+        //setIsFavorite(!card.isArchive);
+
+        // persist favorites in localStorage
+        localStorage.setItem("notes", JSON.stringify(updatedNotes));
+        setShowOptions(false);
+        console.log("Archived")
+    }
     return (
         <>
             <div className="mb-8" key={card.id}>
@@ -95,12 +114,19 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                             </button>
                             <button
                                 className="flex gap-2 block w-full text-left px-4 py-4 text-[16px] text-[var(--color-textPrimary)] hover:bg-[var(--color-secondaryBackgroundHover)]"
-                                onClick={() => console.log("Archive")}
+                                onClick={handleAddToArchive}
                             >
-                                <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" strokeLinejoin="round" strokeWidth="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
-                                </svg>
-                                Archive
+                                {card.isArchive ? (
+                                    <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M20 10H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM9 13v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                    <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 1 1 0 4H4a2 2 0 0 1-2-2Z"/>
+                                    </svg>
+                                ) : (
+                                    <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" strokeLinejoin="round" strokeWidth="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+                                    </svg>
+                                )}
+                                <span>{isArchive ? "Archived" : "Archive"}</span>
                                 
                             </button>
                                 <hr className="text-gray-400" />

@@ -1,4 +1,4 @@
-export default function MoreOptions({ setShowFavorites, setSelectedFolder }){
+export default function MoreOptions({ setShowFavorites, setSelectedFolder, setShowArchive }){
     return(
     <div className="mt-8">
         <h3 className="text-md text-gray-400 mb-5 px-4">More</h3>
@@ -8,6 +8,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder }){
                     onClick={() => {
                         setShowFavorites(true);
                         setSelectedFolder("All");
+                        setShowArchive(false); // turn off archive view
                     }}
                 >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -21,7 +22,14 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder }){
                     </svg>
                     Trash
                 </li>
-                <li className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4">
+                <li
+                    className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    onClick={() => {
+                        setShowArchive(true);
+                        setSelectedFolder("All");
+                        setShowFavorites(false); // turn off favorite view
+                    }}
+                >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinejoin="round" strokeWidth="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
                     </svg> Archived Notes
