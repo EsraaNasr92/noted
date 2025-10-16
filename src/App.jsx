@@ -43,7 +43,7 @@ export default function App() {
                     />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
-                    <div className="p-4 sticky top-0 z-10">
+                    <div className="p-4 top-0 z-10">
                         <h2 className="text-xl font-semibold">
                         {selectedFolder === "All"
                             ? "All Notes"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import NoteEditor from './NoteEditor';
+import MarkdownEditor from './MarkdownEditor';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
 export default function NoteCard({ selectedID, setSelectedID, setNotes, notes }) {
@@ -206,13 +206,12 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                 </div>
             </div>
 
-            <NoteEditor />
-
-    
-            <div className="prose prose-invert max-w-none text-lg mt-6">
-                <p>{card.description}</p>
-            </div>
-
+            <MarkdownEditor
+                setSelectedID={setSelectedID}
+                selectedID={selectedID}
+                notes={notes}
+                setNotes={setNotes}
+            />
         </>
     );
 }
