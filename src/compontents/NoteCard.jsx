@@ -8,11 +8,13 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
     const dropdownRef = useRef(null);
     const [isFavorite, setIsFavorite] = useState(card?.isFavorite || false);
     const [isArchive, setIsArchive] = useState(card?.isArchive || false);
+    const [isDelete, setISDelete] = useState(card?.isDelete || false);
     
     useEffect(() => {
         if(card) {
             setIsFavorite(card.isFavorite || false);
             setIsArchive(card.isArchive || false);
+            setISDelete(card.isDelete || false);
         }
     }, [card]);
 
@@ -73,6 +75,11 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
         setShowOptions(false);
         console.log("Archived")
     }
+
+    const handleDelete = () => {
+        console.log("Add to trash");
+    }
+
     return (
         <>
             <div className="mb-8" key={card.id}>
@@ -135,9 +142,16 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                                 onClick={() => {
                                     const confirmDelete = window.confirm("Are you sure you want to delete this note?");
                                     if(confirmDelete){
-                                        setNotes(notes.filter(note => note.id !== selectedID)); // remove note
+                                        const updatedNotes = notes.map(note =>
+                                            note.id === selectedID
+                                            ? {...note, isDelete: true, isFavorite: false, isArchive: false}
+                                            : note
+                                        )
+                                        //setNotes(notes.filter(note => note.id !== selectedID)); // remove note
+                                        setNotes(updatedNotes);
+                                        localStorage.setItem("notes", JSON.stringify(updatedNotes));
                                         setSelectedID(null);
-                                        console.log("Note deleted");
+                                        console.log("Note moved to trash");
                                     }
                                     setShowOptions(false);
                                 }}

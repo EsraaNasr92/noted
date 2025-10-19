@@ -14,6 +14,7 @@ export default function App() {
     const [selectedFolder, setSelectedFolder] = useState("All"); // current folder
     const [showFavorites, setShowFavorites] = useState(false);
     const [showArchive, setShowArchive]= useState(false);
+    const [showDeletedNotes, setShowDeletedNotes] = useState(false);
 
     return (
         <div className="h-screen text-white">
@@ -33,6 +34,7 @@ export default function App() {
                             setSelectedFolder(folder);
                             setShowFavorites(false); // reset favorite mode
                             setShowArchive(false); // reset archive mood
+                            setShowDeletedNotes(false);
                         }}
                         selectedFolder={selectedFolder}
                     />
@@ -40,6 +42,7 @@ export default function App() {
                         setShowFavorites={setShowFavorites}
                         setSelectedFolder={setSelectedFolder}
                         setShowArchive={setShowArchive}
+                        setShowDeletedNotes={setShowDeletedNotes}
                     />
                 </div>
                 <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
@@ -54,11 +57,14 @@ export default function App() {
                         selectedID={selectedID}
                         setSelectedID={setSelectedID}
                         notes={notes}
+                        setNotes={setNotes}
                         selectedFolder={selectedFolder}
                         setShowFavorites={setShowFavorites}
                         showFavorites={showFavorites}
                         setShowArchive={setShowArchive}
                         showArchive={showArchive}
+                        showDeletedNotes={showDeletedNotes}
+                        setShowDeletedNotes={showDeletedNotes}
                     />
                 </div>
                 <div className="overflow-y-auto p-8">

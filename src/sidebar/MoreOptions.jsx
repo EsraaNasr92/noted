@@ -1,4 +1,4 @@
-export default function MoreOptions({ setShowFavorites, setSelectedFolder, setShowArchive }){
+export default function MoreOptions({ setShowFavorites, setSelectedFolder, setShowArchive, setShowDeletedNotes }){
     return(
     <div className="mt-8">
         <h3 className="text-md text-gray-400 mb-5 px-4">More</h3>
@@ -9,6 +9,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
                         setShowFavorites(true);
                         setSelectedFolder("All");
                         setShowArchive(false); // turn off archive view
+                        setShowDeletedNotes(false);
                     }}
                 >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -16,7 +17,15 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
                     </svg> Favorites
                                 
                 </li>
-                <li className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4">
+                <li
+                    className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    onClick={() => {
+                        setShowDeletedNotes(true);
+                        setSelectedFolder("All");
+                        setShowFavorites(false);
+                        setShowArchive(false);
+                    }}
+                >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                     </svg>
@@ -28,6 +37,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
                         setShowArchive(true);
                         setSelectedFolder("All");
                         setShowFavorites(false); // turn off favorite view
+                        setShowDeletedNotes(false);
                     }}
                 >
                     <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
