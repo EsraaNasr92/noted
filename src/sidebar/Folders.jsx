@@ -1,9 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // folder section in sidebar
 export default function Folder({ folders, setFolders, setSelectedFolder, selectedFolder }){
     const [newFolder, setNewFolder] = useState("");
-    const [showInput, setShowInput] = useState(false)
+    const [showInput, setShowInput] = useState(false);
+    const [editingFolderId, setEditingFolderId] = useState(null);
+    const [editedTitle, setEditedTitle] = useState("");
+
+    // Load folder from local storage
+    useEffect(() => {
+        const saveFolders = JSON.parse(localStorage.getItem("folder")) || [];
+        if(saveFolders.length > 0) setFolders(saveFolders);
+    }, []);
+    
+    // Save folder to localStorage
+    useEffect(() => {
+        localStorage.setItem("folder", JSON.stringify(folders));
+    }, [folders]);
 
     const addNewFolder = () => {
         if (!newFolder.trim()) return; // To prevent empty input
@@ -11,11 +24,39 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
             id: folders.length > 0 ? folders[folders.length - 1].id + 1 : 1, // auto-generate id
             title: newFolder.trim()
         };
+        const updated = [...folders, newFolderObj];
         setFolders([...folders, newFolderObj]);
         setShowInput(false)
         setNewFolder("");
     }
 
+    const handleEditFolder = (folder) => {
+        setEditingFolderId(folder.id);
+        setEditedTitle(folder.title);
+    }
+    // save folder after editing
+    const handleEditSave = (folderId) => {
+        if (!editedTitle.trim()) return;
+
+        const updatedFolders = folders.map((f) =>
+            f.id === folderId ? { ...f, title: editedTitle.trim() } : f
+        );
+        setFolders(updatedFolders);
+
+        // ✅ Fix: Update selected folder if it's the same one being edited
+        const oldFolder = folders.find(f => f.id === folderId);
+        if (selectedFolder === oldFolder?.title) {
+            setSelectedFolder(editedTitle.trim());
+        }
+
+        setEditingFolderId(null);
+        setEditedTitle("");
+    }
+    // Delete folder
+    const handleDeleteFolder = (folderId) => {
+        const updatedFolders = folders.filter((f) => f.id !== folderId);
+        setFolders(updatedFolders);
+    };
     return(
         <div className="mt-8">
             <h3 className="flex items-center justify-between text-md text-gray-400 mb-5 px-4">Folders
@@ -57,14 +98,99 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
                     <li
                         key={folder.id}
                         onClick={() => setSelectedFolder(folder.title)}
-                        className={`flex gap-2 items-center mb-4 py-2 rounded cursor-pointer px-4 transition-colors duration-150
+                        onDoubleClick={() => handleEditFolder(folder)}
+                        className={`group flex items-center justify-between mb-3 py-2 rounded cursor-pointer px-4 transition-colors duration-150
                             ${selectedFolder === folder.title
                             ? "bg-[var(--color-secondaryBackgroundHover)] text-white"
-                            : "text-gray-400 hover:bg-gray-700"}`}                    >
-                        <svg className="w-6 h-6 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"/>
-                        </svg>{folder.title}
+                            : "text-gray-400 hover:bg-gray-700"}`}
+                    >
+                    {/* Left side: Folder icon + name/input */}
+                    <div className="flex items-center gap-2 w-full">
+                        <svg
+                        className="w-5 h-5 text-gray-400 dark:text-white flex-shrink-0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"
+                        />
+                        </svg>
+
+                        {editingFolderId === folder.id ? (
+                        <input
+                            value={editedTitle}
+                            onChange={(e) => setEditedTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                            if (e.key === "Enter") handleEditSave(folder.id);
+                            }}
+                            onBlur={() => handleEditSave(folder.id)}
+                            className="bg-transparent text-white border-b border-gray-500 outline-none w-full"
+                            autoFocus
+                        />
+                        ) : (
+                        <span className="truncate">{folder.title}</span>
+                        )}
+                    </div>
+
+                    {/* Right side: Edit + Delete icons */}
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 ml-2">
+                        {/* Edit icon */}
+                        <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditFolder(folder);
+                        }}
+                        className="hover:text-blue-400"
+                        title="Edit"
+                        >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                        >
+                            <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.862 4.487l1.687 1.688a1.5 1.5 0 010 2.121l-8.495 8.495-3.182.795.795-3.182 8.495-8.495a1.5 1.5 0 012.121 0z"
+                            />
+                        </svg>
+                        </button>
+
+                        {/* Delete icon */}
+                        <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFolder(folder.id);
+                        }}
+                        className="hover:text-red-400"
+                        title="Delete"
+                        >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                        >
+                            <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 7h12m-1 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V7m3 0V5a1 1 0 011-1h2a1 1 0 011 1v2"
+                            />
+                        </svg>
+                        </button>
+                    </div>
                     </li>
+
                 ))}
             </ul>
         </div>

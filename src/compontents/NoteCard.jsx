@@ -97,7 +97,9 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                     </button>
                     {/* Show dropdown menu */}
                     {showOptions && (
-                        <div className="absolute right-10 top-24 mt-2 w-45 bg-[#333333] border border-[#333333] rounded-md shadow-lg overflow-hidden z-20 animate-fadeIn">
+                        <div
+                            ref={dropdownRef}
+                            className="absolute right-10 top-24 mt-2 w-45 bg-[#333333] border border-[#333333] rounded-md shadow-lg overflow-hidden z-20 animate-fadeIn">
                             <button
                                 className="flex gap-2 block w-full text-left px-4 py-4 text-[16px] text-[var(--color-textPrimary)] hover:bg-[var(--color-secondaryBackgroundHover)]"
                                 onClick={handleAddToFavorite}
