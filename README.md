@@ -1,17 +1,37 @@
-# React + Vite
+# Noted
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and intuitive notes & to-do list application built with React + Vite.  
+Manage your folders, notes and tasks with — create, edit, delete, mark as favorite and filter by category.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Create, rename and delete folders to organize your notes.  
+- Create, edit and delete notes within folders.  
+- Mark notes as favorites and filter to view only favorites.  
+- Filter notes by folder category.  
+- Dropdown menu for note options (delete, more) for cleaner UI.  
+- Responsive design with modern tool-stack (React, Vite, Tailwind CSS, etc.).  
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React** — UI framework  
+- **Vite** — build tool  
+- **Tailwind CSS** — styling  
+- **ESLint / Prettier** — linting & formatting  
+- **Optional Data Handling** — JSON file format for data storage (or local storage)  
+- **Folder / notes structure** — organized in components for reusability and maintainability  
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# noted
+To get your local copy up and running:
+
+```bash
+# Clone the repo
+git clone https://github.com/EsraaNasr92/noted.git
+cd noted
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
