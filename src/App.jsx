@@ -73,6 +73,7 @@ export default function App() {
                         setSelectedID={setSelectedID}
                         setNotes={setNotes}
                         notes={notes}
+                        folders={folders}
                     />
                 </div>
 

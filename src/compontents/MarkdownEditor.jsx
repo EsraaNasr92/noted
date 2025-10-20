@@ -79,7 +79,7 @@ export default function MarkdownEditor({ selectedID, setSelectedID, notes, setNo
 
                     <button
                         type="button"
-                        className="mt-3 px-5 py-2 bg-blue-400 hover:bg-blue-700 rounded text-white font-medium"
+                        className="mt-3 ml-4 px-5 py-2 bg-blue-400 hover:bg-blue-700 rounded text-white font-medium"
                         onClick={handlePreview}
                     >
                         Preview

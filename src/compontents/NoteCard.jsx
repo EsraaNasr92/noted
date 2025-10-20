@@ -2,19 +2,34 @@ import { useEffect, useRef, useState } from 'react';
 import MarkdownEditor from './MarkdownEditor';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
-export default function NoteCard({ selectedID, setSelectedID, setNotes, notes }) {
+export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, folders }) {
     const card = notes.find((c) => c.id === selectedID);
     const [showOptions, setShowOptions] = useState(false);
     const dropdownRef = useRef(null);
+
     const [isFavorite, setIsFavorite] = useState(card?.isFavorite || false);
     const [isArchive, setIsArchive] = useState(card?.isArchive || false);
     const [isDelete, setISDelete] = useState(card?.isDelete || false);
+    const [isEditable, setIsEditable] = useState(card?.isEditable || false);
+
+      // edit-mode flags (booleans)
+    const [editingTitle, setEditingTitle] = useState(false);
+    const [editingDate, setEditingDate] = useState(false);
+    const [editingFolder, setEditingFolder] = useState(false);
+    
+    const [editableTitle, setEditableTitle] = useState("");
+    const [editableDate, setEditableDate] = useState("");
+    const [editableFolder, setEditableFolder] = useState("");
     
     useEffect(() => {
         if(card) {
             setIsFavorite(card.isFavorite || false);
             setIsArchive(card.isArchive || false);
             setISDelete(card.isDelete || false);
+
+            setEditableTitle(card.title || "");
+            setEditableDate(card.date || "");
+            setEditableFolder(card.folder || "");
         }
     }, [card]);
 
@@ -40,6 +55,13 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
     );
 
     if (!card) return <p>Note not found</p>;
+
+    // helper: update note(s) and persist
+    const updateNotes = (patch) => {
+        const updatedNotes = notes.map((note) => (note.id === selectedID ? { ...note, ...patch } : note));
+        setNotes(updatedNotes);
+        localStorage.setItem("notes", JSON.stringify(updatedNotes));
+    };
 
     const handleOptions = () => {
         setShowOptions((prev) => !prev);
@@ -80,11 +102,55 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
         console.log("Add to trash");
     }
 
+    // Save handlers for each field (independent)
+    const saveTitle = () => {
+        // only update if changed
+        if (editableTitle !== card.title) updateNotes({ title: editableTitle });
+        setEditingTitle(false);
+    };
+
+    const saveDate = () => {
+        if (editableDate !== card.date) updateNotes({ date: editableDate });
+        setEditingDate(false);
+    };
+
+    const saveFolder = (newFolder) => {
+        // allow passing newFolder (from select change) or use editableFolder
+        const value = newFolder ?? editableFolder;
+        if (value !== card.folder) updateNotes({ folder: value });
+        setEditableFolder(value);
+        setEditingFolder(false);
+    };
     return (
         <>
             <div className="mb-8" key={card.id}>
                 <div className="flex justify-between">
-                    <h2 className="text-3xl font-bold mb-8">{card.title}</h2>
+                    {editingTitle ? (
+                        <input
+                        type="text"
+                        value={editableTitle}
+                        onChange={(e) => setEditableTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                                saveTitle();
+                            if (e.key === "Escape") {
+                                setEditableTitle(card.title || "");
+                                setEditingTitle(false);
+                            }
+                        }}
+                    onBlur={saveTitle}
+                        className="text-3xl font-bold mb-8 bg-transparent border-b border-gray-500 focus:outline-none text-white"
+                        autoFocus
+                        />
+                    ) : (
+                        <h2
+                        className="text-3xl font-bold mb-8 text-white cursor-pointer"
+                        onDoubleClick={() => setEditingTitle(true)}
+                        >
+                        {editableTitle}
+                        </h2>
+                    )}
+                    
                     <button
                         type="button"
                         name="options"
@@ -189,9 +255,36 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                             />
                         </svg>
                         <h4 className="pl-2 font-semibold text-md">Date</h4>
-                        <div className="text-white font-semibold text-md underline ml-10">
-                            {card.date}
-                        </div>
+                            {editingDate ? (
+                                <input
+                                    type="date"
+                                    value={editableDate}
+                                    onChange={(e) => {
+                                        const newValue = e.target.value;
+                                        setEditableDate(newValue);
+                                        saveDate(newValue);
+                                    }}
+                                    onBlur={() => saveDate()}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter")
+                                            saveDate();
+                                        if (e.key === "Escape") {
+                                            setEditableDate(card.date || "");
+                                            setEditingDate(false);
+                                        }
+                                    }}
+                                    className="ml-3 bg-transparent border-b border-gray-500 text-white focus:outline-none"
+                                />
+                            ) : (
+                                <div className="ml-3 text-white font-semibold underline">
+                                    <span
+                                        className="cursor-pointer"
+                                        onDoubleClick={() => setEditingDate(true)}
+                                    >
+                                        {editableDate}
+                                    </span>
+                                </div>
+                            )}
                     </div>
 
                     <hr className="border-gray-600 my-1" />
@@ -215,9 +308,34 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes })
                             />
                         </svg>
                         <h4 className="pl-2 font-semibold text-md">Folder</h4>
-                        <div className="text-white font-semibold text-md underline ml-7">
-                            {card.folder}
-                        </div>
+                        {editingFolder ? (
+                            <select
+                                value={editableFolder}
+                                onChange={(e) => {
+                                    const newValue = e.target.value;
+                                    setEditableFolder(newValue);
+                                    saveFolder(newValue);
+                                }}
+                                onBlur={() => saveFolder()}
+                                className="ml-3 bg-transparent border-b border-gray-500 text-white focus:outline-none"
+                                autoFocus
+                            >
+                            {folders.map((folder) => (
+                                <option key={folder.id || folder.title} value={folder.title}>
+                                    {folder.title}
+                                </option>
+                            ))}
+                            </select>
+                        ) : (
+                            <div className="ml-3 text-white font-semibold underline">
+                                <span
+                                    className="cursor-pointer"
+                                    onDoubleClick={() => setEditingFolder(true)}
+                                >
+                                    {editableFolder}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
