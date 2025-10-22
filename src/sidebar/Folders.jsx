@@ -18,16 +18,32 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
         localStorage.setItem("folder", JSON.stringify(folders));
     }, [folders]);
 
-    const addNewFolder = () => {
+    const addNewFolder = async (e) => {
+        e.preventDefault();
+
         if (!newFolder.trim()) return; // To prevent empty input
-        const newFolderObj = {
-            id: folders.length > 0 ? folders[folders.length - 1].id + 1 : 1, // auto-generate id
-            title: newFolder.trim()
-        };
-        const updated = [...folders, newFolderObj];
-        setFolders([...folders, newFolderObj]);
-        setShowInput(false)
-        setNewFolder("");
+        try {
+            const res = await fetch("http://localhost:5000/api/folders", {
+                method: "POST",
+                headers:{"Content-Type": "application/json"},
+                body: JSON.stringify({ title: newFolder}),
+            });
+            const saveFolder =  await res.json();
+
+            if(!res.ok) throw new Error(saveFolder.message || "Failed to add folder");
+
+            const newFolderObj = {
+                id: saveFolder._id,
+                title: saveFolder.title,
+            };
+
+            setFolders((prev) => [...prev, newFolderObj]);
+            setShowInput(false)
+            setNewFolder("");
+
+        } catch (err) {
+            console.error("Error adding folder:", err);
+        }
     }
 
     const handleEditFolder = (folder) => {
@@ -84,8 +100,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
                     className="w-full p-1 mb-4 border-gray-600 bg-gray-700 text-white rounded bg-transparent outline-none"
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            e.preventDefault();
-                            addNewFolder();
+                            addNewFolder(e);
                         }
                     }}
                     required
