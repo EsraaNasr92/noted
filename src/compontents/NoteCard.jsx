@@ -2,8 +2,41 @@ import { useEffect, useRef, useState } from 'react';
 import MarkdownEditor from './MarkdownEditor';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
-export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, folders }) {
+export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, folders, setFolders }) {
     const card = notes.find((c) => c.id === selectedID);
+    const folder = folders.find((f) => f.id === card?.folder);
+
+    useEffect(() => {
+        // Fetch folder name from database
+        async function fetchFolder(){
+            try {
+                const response = await fetch("http://localhost:5000/api/folders");
+                const data = await response.json();
+
+                // Normalize MongoDB _id to id
+                const normalized = data.map((note) => ({
+                    ...note,
+                    id: note._id,
+                }));
+
+                setFolders(normalized);
+            } catch (err) {
+                console.error("Error fetching notes:", err);
+            }
+        }
+        fetchFolder();
+
+        console.log("Note folder ID:", card?.folder);
+    console.log("Found folder:", folders);
+
+    }, []);
+
+    useEffect(() => {
+
+        console.log("Selected ID:", selectedID);
+        console.log("Card found:", card);
+    }, [selectedID, card]);
+
     const [showOptions, setShowOptions] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -269,7 +302,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
                                         if (e.key === "Enter")
                                             saveDate();
                                         if (e.key === "Escape") {
-                                            setEditableDate(card.date || "");
+                                            setEditableDate((card.date) || "");
                                             setEditingDate(false);
                                         }
                                     }}

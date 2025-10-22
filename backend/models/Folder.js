@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const folderSchema = new mongoose.schema({
+const folderSchema = new mongoose.Schema({
     id:{
         type: Number,
         unique: true,

@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
-const noteSchema = new mongoose.schema({
+const noteSchema = new mongoose.Schema({
     id:{
         type: Number,
         unique: true,
+        required: true,
     },
     title:{
         type: String,

@@ -2,14 +2,19 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import folderRoutes from "./routes/folderRoutes.js";
+import noteRoutes from "./routes/noteRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors()); // allow frontend access
 app.use(express.json());
+
+app.use("/api/notes", noteRoutes);
+app.use("/api/folders", folderRoutes);
 
 // Connect to MongoDB
 mongoose

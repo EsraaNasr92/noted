@@ -26,6 +26,25 @@ export default function NoteList({
     }
 
     useEffect(() => {
+        // Fetch Notes from database
+        async function fetchNotes(){
+            try {
+                const response = await fetch("http://localhost:5000/api/notes");
+                const data = await response.json();
+
+                // Normalize MongoDB _id to id
+                const normalized = data.map((note) => ({
+                    ...note,
+                    id: note._id,
+                }));
+
+                setNotes(normalized);
+            } catch (err) {
+                console.error("Error fetching notes:", err);
+            }
+        }
+        fetchNotes();
+
         const handleClickOutside  = () => setOpenMenuId(null);
         window.addEventListener("click", handleClickOutside);
         return() => {
@@ -39,7 +58,7 @@ export default function NoteList({
             note.id === id ? {...note, isDelete: false} : note
         );
         setNotes(updatedNotes);
-        localStorage.setItem("notes", JSON.stringify(updatedNotes));
+        //localStorage.setItem("notes", JSON.stringify(updatedNotes));
         setOpenMenuId(null); // close menu
         setSelectedID(null); // refresh the card view
         console.log("Note restored");
@@ -50,7 +69,7 @@ export default function NoteList({
         if (confirmDelete) {
             const updatedNotes = notes.filter(note => note.id !== id);
             setNotes(updatedNotes);
-            localStorage.setItem("notes", JSON.stringify(updatedNotes));
+            //localStorage.setItem("notes", JSON.stringify(updatedNotes));
             console.log("Note permanently deleted");
         }
     };
@@ -73,7 +92,7 @@ export default function NoteList({
                             >
                                 <h3 className="font-semibold mb-3">{card.title}</h3>
                                 <p className="text-gray-400 truncate">
-                                    <span className="pr-2">{card.date || ""}</span>
+                                    <span className="pr-2">{new Date(card.date).toLocaleDateString('en-CA') || ""}</span>
                                     {card.description || ""}
                                 </p>
 

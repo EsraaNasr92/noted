@@ -74,6 +74,7 @@ export default function App() {
                         setNotes={setNotes}
                         notes={notes}
                         folders={folders}
+                        setFolders={setFolders}
                     />
                 </div>
 
