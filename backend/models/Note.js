@@ -13,6 +13,7 @@ const noteSchema = new mongoose.Schema({
     date:{
         type: Date,
         required: true,
+        default: Date.now,
     },
     folder:{
         type: mongoose.Schema.Types.ObjectId,

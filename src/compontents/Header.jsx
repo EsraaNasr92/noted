@@ -45,7 +45,7 @@ export default function Header( { notes, setNotes, folders } ){
     }
 
     // add new note function
-    const addNewNote = () => {
+    const addNewNote = async () => {
         const validationErrors = validateFields();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -54,16 +54,36 @@ export default function Header( { notes, setNotes, folders } ){
 
         setErrors({}); // clear error and add note
 
+        try {
+            const res = await fetch("http://localhost:5000/api/notes", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    title: newNote.title.trim(),
+                    description: newNote.description.trim(),
+                    date: newNote.date || new Date().toISOString().split("T")[0], // default to today's date
+                    folder: folders.find(f => f.title === newNote.folder)?._id,
+                }),
+            });
+
+        const saveNote = await res.json();
+        
+        if(!res.ok) throw new Error(saveNote.message || "Failed to save note");
+
         const newCardObj = {
-            id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1, // auto-generate id
             title: newNote.title.trim(),
             description: newNote.description.trim(),
             date: newNote.date || new Date().toISOString().split("T")[0], // default to today's date
-            folder: newNote.folder
-        };
-        setNotes([...notes, newCardObj]);
+            folder: newNote.folder, // keep the folder name for display
+            _id: saveNote._id, // keep MongoDB id for future updates/deletes
+        }
+        setNotes(prev => [...prev, newCardObj]);
         setNewNote({ title: "", description: "", date: "", folder: "" });
         setShowAddNote(false);
+        } catch (err) {
+            console.error("Error adding note:", err);
+            setErrors({ general: "Failed to add note, please try again" });
+        }
     }
 
     const handleChange = (e) => {
