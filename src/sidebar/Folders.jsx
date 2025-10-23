@@ -112,7 +112,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
                 {folders.map(folder => (
                     <li
                         key={folder.id}
-                        onClick={() => setSelectedFolder(folder.title)}
+                        onClick={() => setSelectedFolder(folder.id || folder._id)}
                         onDoubleClick={() => handleEditFolder(folder)}
                         className={`group flex items-center justify-between mb-3 py-2 rounded cursor-pointer px-4 transition-colors duration-150
                             ${selectedFolder === folder.title

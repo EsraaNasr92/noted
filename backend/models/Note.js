@@ -17,7 +17,7 @@ const noteSchema = new mongoose.Schema({
     },
     folder:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "folders", // reference to Folder model
+        ref: "Folder", // reference to Folder model
         required: true,
     },
     description:{

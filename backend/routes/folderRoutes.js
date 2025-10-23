@@ -1,5 +1,5 @@
 import express from "express";
-import { getFolder } from "../controllers/folderControllers.js";
+import { deleteFolder, getFolder } from "../controllers/folderControllers.js";
 import Folder from "../models/Folder.js";
 
 
@@ -20,5 +20,7 @@ router.post("/", async(req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
+
+router.delete("/:id", deleteFolder);
 
 export default router;

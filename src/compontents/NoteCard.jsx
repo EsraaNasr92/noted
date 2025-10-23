@@ -62,7 +62,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
 
             setEditableTitle(card.title || "");
             setEditableDate(card.date || "");
-            setEditableFolder(card.folder || "");
+            setEditableFolder(card.folder?.title || "");
         }
     }, [card]);
 
@@ -150,7 +150,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
     const saveFolder = (newFolder) => {
         // allow passing newFolder (from select change) or use editableFolder
         const value = newFolder ?? editableFolder;
-        if (value !== card.folder) updateNotes({ folder: value });
+        if (value !== card.folder?._id) updateNotes({ folder: value });
         setEditableFolder(value);
         setEditingFolder(false);
     };
@@ -354,7 +354,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
                                 autoFocus
                             >
                             {folders.map((folder) => (
-                                <option key={folder.id || folder.title} value={folder.title}>
+                                <option key={folder._id} value={folder._id}>
                                     {folder.title}
                                 </option>
                             ))}

@@ -22,7 +22,9 @@ export default function NoteList({
     } else if (showDeletedNotes){
         filteredNotes = notes.filter(note => note.isDelete);
     }else if (selectedFolder !== "All") {
-        filteredNotes = notes.filter(note => note.folder === selectedFolder);
+        filteredNotes = notes.filter(
+            note => note.folder?._id === selectedFolder || note.folder === selectedFolder
+        );
     }
 
     useEffect(() => {

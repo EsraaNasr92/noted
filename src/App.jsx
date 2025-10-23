@@ -50,7 +50,7 @@ export default function App() {
                         <h2 className="text-xl font-semibold">
                         {selectedFolder === "All"
                             ? "All Notes"
-                            : folders.find((folder) => folder.title === selectedFolder)?.title || "Folder not found"}
+                            : folders.find((folder) => folder.id === selectedFolder)?.title || "Folder not found"}
                         </h2>
                     </div>
                     <NoteList
