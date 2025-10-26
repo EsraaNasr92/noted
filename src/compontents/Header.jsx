@@ -62,7 +62,8 @@ export default function Header( { notes, setNotes, folders } ){
                     title: newNote.title.trim(),
                     description: newNote.description.trim(),
                     date: newNote.date || new Date().toISOString().split("T")[0], // default to today's date
-                    folder: folders.find(f => f.title === newNote.folder)?._id,
+                    folder: folders.find(f => f.title === newNote.folder)?.id ||
+                    folders.find(f => f.title === newNote.folder)?._id,
                 }),
             });
 

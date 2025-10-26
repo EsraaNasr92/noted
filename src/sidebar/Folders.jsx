@@ -69,9 +69,23 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
         setEditedTitle("");
     }
     // Delete folder
-    const handleDeleteFolder = (folderId) => {
-        const updatedFolders = folders.filter((f) => f.id !== folderId);
-        setFolders(updatedFolders);
+    const handleDeleteFolder = async (folderId) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/folders/${folderId}`, {
+                method: "DELETE",
+            });
+            const data = await res.json();
+
+            if(!res.ok) throw new Error(data.message || "Failed to delete folder");
+
+            const updatedFolders = folders.filter((f) => f.id !== folderId && f._id !== folderId);
+            setFolders(updatedFolders);
+
+            console.log("Folder delete Successfully", data);
+            
+        } catch (error) {
+            console.error("Error deleting Folder:", error);
+        }
     };
     return(
         <div className="mt-8">
