@@ -39,7 +39,7 @@ export const deleteFolder = async (req, res) => {
             message: `Folder "${folderToDelete.title}" deleted successfully. Notes moved to "Default" folder.`,
         });
 
-        res.status(200).json({ message: "Folder deleted successfully", deletedFolder });
+        res.status(200).json({ message: "Folder deleted successfully", defaultFolder });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -8,3 +8,31 @@ export const getNotes = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const deleteNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Try numeric ID first, fallback to MongoDB _id
+        let note = null;
+
+        if (!isNaN(Number(id))) {
+        // Numeric ID (e.g. 1, 2, 3)
+        note = await Note.findOne({ id: Number(id) });
+        } else {
+        // MongoDB ObjectId (string)
+        note = await Note.findById(id);
+        }
+
+        if (!note) {
+        return res.status(404).json({ message: "Note not found" });
+        }
+
+        await note.deleteOne();
+
+        res.status(200).json({ message: "Note deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting note:", error);
+        res.status(500).json({ message: error.message });
+    }
+};
