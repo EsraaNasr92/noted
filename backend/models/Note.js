@@ -24,6 +24,14 @@ const noteSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed, // Allow string or array
         required: true,
     },
+    isFavorite:{
+        type: Boolean,
+        default: false,
+    },
+    isArchive:{
+        type: Boolean,
+        default: false,
+    },
 }, {timestamps: true});
 
 export default mongoose.model("Note", noteSchema);

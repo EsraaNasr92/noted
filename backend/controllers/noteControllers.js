@@ -36,3 +36,26 @@ export const deleteNote = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const updatedNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const filter = isNaN(Number(id))
+        ? { _id: id }  // handle Mongo ObjectId
+        : { id: Number(id) }; // handle numeric id
+
+        const updated = await Note.findOneAndUpdate(
+        filter,
+        { $set: req.body },
+        { new: true }
+        );
+
+        if (!updated)
+        return res.status(404).json({ message: "Note not found" });
+
+        res.json(updated);
+    } catch (error) {
+        console.error("Error updating note:", error);
+        res.status(500).json({ message: "Failed to update note" });
+    }
+};

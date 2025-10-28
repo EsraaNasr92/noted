@@ -101,35 +101,66 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
     }
 
     // handle add to favorite
-    const handleAddToFavorite = () =>{
+    const handleAddToFavorite = async  () => {
+        const updatedValue = !card.isFavorite;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ isFavorite: updatedValue }),
+            });
+        if (!response.ok) throw new Error("Failed to update favorite status");
+
+        const updatedNote = await response.json();
+
         const updatedNotes = notes.map(note =>
             note.id === selectedID
-            ?{...note, isFavorite: !note.isFavorite} // Toggle
+            ?{ ...note, isFavorite: updatedValue } // Toggle
             :note
         );
         setNotes(updatedNotes);
-        //setIsFavorite(!card.isFavorite);
 
         // persist favorites in localStorage
         localStorage.setItem("notes", JSON.stringify(updatedNotes));
+        setIsFavorite(updatedValue);
         setShowOptions(false);
+        console.log("Favorite status updated in DB");
+        } catch (error) {
+            console.error("Error updating favorite:", error);
+        }
     }
 
     // handle add to favorite
-    const handleAddToArchive = () =>{
-        const updatedNotes = notes.map(note =>
-            note.id === selectedID
-            ?{...note, isArchive: !note.isArchive} // Toggle
-            :note
-        );
-        setNotes(updatedNotes);
-        //setIsFavorite(!card.isArchive);
+const handleAddToArchive = async () => {
+    const updatedValue = !card.isArchive;
 
-        // persist favorites in localStorage
+    try {
+        const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isArchive: updatedValue }),
+        });
+
+        if (!response.ok) throw new Error("Failed to update archive status");
+
+        const updatedNote = await response.json();
+
+        const updatedNotes = notes.map((note) =>
+        note.id === selectedID ? { ...note, ...updatedNote } : note
+        );
+
+        setNotes(updatedNotes);
         localStorage.setItem("notes", JSON.stringify(updatedNotes));
+        setIsArchive(updatedValue);
         setShowOptions(false);
-        console.log("Archived")
+
+        console.log("Archive status updated in DB");
+    } catch (err) {
+        console.error("Error updating archive:", err);
     }
+};
+
 
     const handleDelete = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this note?");
