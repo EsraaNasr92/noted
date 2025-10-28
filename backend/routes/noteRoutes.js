@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.delete("/:id", deleteNote);
+router.patch("/api/notes/:id/delete", deleteNote);
 
 router.patch("/:id", updatedNote);
 

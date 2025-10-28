@@ -32,6 +32,10 @@ const noteSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    isDeleted:{
+        type: Boolean,
+        default: false,
+    },
 }, {timestamps: true});
 
 export default mongoose.model("Note", noteSchema);

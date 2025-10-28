@@ -42,7 +42,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
 
     const [isFavorite, setIsFavorite] = useState(card?.isFavorite || false);
     const [isArchive, setIsArchive] = useState(card?.isArchive || false);
-    const [isDelete, setISDelete] = useState(card?.isDelete || false);
+    const [isDeleted, setISDelete] = useState(card?.isDeleted || false);
     const [isEditable, setIsEditable] = useState(card?.isEditable || false);
 
       // edit-mode flags (booleans)
@@ -58,7 +58,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         if(card) {
             setIsFavorite(card.isFavorite || false);
             setIsArchive(card.isArchive || false);
-            setISDelete(card.isDelete || false);
+            setISDelete(card.isDeleted || false);
 
             setEditableTitle(card.title || "");
             setEditableDate(card.date || "");
@@ -167,24 +167,29 @@ const handleAddToArchive = async () => {
         if (!confirmDelete) return;
 
         try {
-            // Send DELETE request to backend
+            // Mark as deleted (don't remove from database)
             const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
-                method: "DELETE",
+                method: "PATCH",
+                headers: { "Content-Type": "application/json "},
+                body: JSON.stringify({
+                    isDeleted: true
+                }),
             });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to delete note");
-            }
+            if (!response.ok) throw new Error(error.message || "Failed to move note to Trash");
 
-            // Remove from local state after successful deletion
-            const updatedNotes = notes.filter((note) => note.id !== selectedID);
+            const updatedNote = await response.json();
+
+            // Update local state
+            const updatedNotes = notes.map(note =>
+                note.id === selectedID ? { ...note, ...updatedNote } : note
+            );
             setNotes(updatedNotes);
             localStorage.setItem("notes", JSON.stringify(updatedNotes));
 
             setSelectedID(null);
             setShowOptions(false);
-            console.log("Note deleted successfully");
+            console.log("Note moved to trash successfully");
         } catch (err) {
             console.error("Error deleting note:", err);
             alert("Failed to delete note. Please try again.");
@@ -282,7 +287,7 @@ const handleAddToArchive = async () => {
                             >
                                 {card.isArchive ? (
                                     <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                        <path fill-rule="evenodd" d="M20 10H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM9 13v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                        <path fillRule="evenodd" d="M20 10H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM9 13v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clipRule="evenodd"/>
                                     <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 1 1 0 4H4a2 2 0 0 1-2-2Z"/>
                                     </svg>
                                 ) : (

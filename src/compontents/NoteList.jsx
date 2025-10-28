@@ -20,7 +20,7 @@ export default function NoteList({
     } else if (showArchive) {
         filteredNotes = notes.filter(note => note.isArchive);
     } else if (showDeletedNotes){
-        filteredNotes = notes.filter(note => note.isDelete);
+        filteredNotes = notes.filter(note => note.isDeleted);
     }else if (selectedFolder !== "All") {
         filteredNotes = notes.filter(
             note => note.folder?._id === selectedFolder || note.folder === selectedFolder
@@ -57,7 +57,7 @@ export default function NoteList({
     // Restore note
     const handleRestore = (id) => {
         const updatedNotes = notes.map(note =>
-            note.id === id ? {...note, isDelete: false} : note
+            note.id === id ? {...note, isDeleted: false} : note
         );
         setNotes(updatedNotes);
         //localStorage.setItem("notes", JSON.stringify(updatedNotes));
