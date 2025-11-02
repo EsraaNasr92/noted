@@ -26,7 +26,10 @@ export default function App() {
                         folders={folders}
                         setFolders={setFolders}
                     />
-                    <Recents />
+                    <Recents
+                        notes= {notes}
+                        setSelectedID={setSelectedID}
+                    />
                     <Folder
                         folders={folders}
                         setFolders={setFolders}

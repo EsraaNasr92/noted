@@ -64,3 +64,63 @@ export const updatedNote = async (req, res) => {
         res.status(500).json({ message: "Failed to update note" });
     }
 };
+
+export const permanentlyDelete = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Try numeric ID first, fallback to MongoDB _id
+        let note = null;
+
+        if (!isNaN(Number(id))) {
+            // Numeric ID (e.g. 1, 2, 3)
+            note = await Note.findOne({ id: Number(id) });
+        } else {
+            // MongoDB ObjectId (string)
+            note = await Note.findById(id);
+        }
+
+        if (!note) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        // Permanently Delete
+        await Note.deleteOne({ _id: note._id });
+
+        res.status(200).json({
+            message: "Note permanently deleted successfully",
+            note,
+        });
+    } catch (error) {
+        console.error("Error deleting note:", error);
+        res.status(500).json({ message: "Failed to permentely delete note" });
+    }
+}
+
+export const restoreNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const filter = isNaN(Number(id))
+            ? { _id: id }
+            : { id: Number(id) };
+
+        const restoredNote = await Note.findOneAndUpdate(
+            filter,
+            { $set: { isDeleted: false } },
+            { new: true }
+        );
+
+        if (!restoredNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        res.status(200).json({
+            message: "Note restored successfully",
+            note: restoredNote,
+        });
+    } catch (error) {
+        console.error("Error restoring note:", error);
+        res.status(500).json({ message: "Failed to restore note" });
+    }
+};

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteNote, getNotes, updatedNote } from "../controllers/noteControllers.js";
+import { deleteNote, getNotes, permanentlyDelete, restoreNote, updatedNote } from "../controllers/noteControllers.js";
 import Note from "../models/Note.js";
 
 
@@ -33,8 +33,9 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.patch("/api/notes/:id/delete", deleteNote);
-
+router.patch("/:id/delete", deleteNote);
 router.patch("/:id", updatedNote);
+router.patch("/:id/restore", restoreNote);
+router.delete("/:id", permanentlyDelete);
 
 export default router;

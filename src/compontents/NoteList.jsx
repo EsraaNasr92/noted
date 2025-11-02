@@ -55,25 +55,56 @@ export default function NoteList({
     }, []);
 
     // Restore note
-    const handleRestore = (id) => {
-        const updatedNotes = notes.map(note =>
-            note.id === id ? {...note, isDeleted: false} : note
-        );
-        setNotes(updatedNotes);
-        //localStorage.setItem("notes", JSON.stringify(updatedNotes));
-        setOpenMenuId(null); // close menu
-        setSelectedID(null); // refresh the card view
-        console.log("Note restored");
-    }
-    // Delete Permanently
-    const handlePermanentDelete = (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to permanently delete this note?");
-        if (confirmDelete) {
-            const updatedNotes = notes.filter(note => note.id !== id);
-            setNotes(updatedNotes);
-            //localStorage.setItem("notes", JSON.stringify(updatedNotes));
-            console.log("Note permanently deleted");
+    const handleRestore = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/notes/${id}/restore`, {
+                method: "PATCH",
+            });
+
+            // Try parsing JSON safely
+            let data;
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error("Invalid JSON response from server");
+            }
+
+            if (response.ok) {
+                console.log("Note restored:", data.note);
+                const updatedNotes = notes.filter(note => note.id !== id);
+                setNotes(updatedNotes);
+                setOpenMenuId(null);
+                setSelectedID(null);
+            } else {
+                console.error("Failed to restore note:", data.message);
+            }
+        } catch (error) {
+            console.error("Error restoring note:", error);
         }
+    };
+
+    // Delete Permanently
+    const handlePermanentDelete = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to permanently delete this note?");
+        try {
+
+            const response = await fetch(`http://localhost:5000/api/notes/${id}`, {
+                method: "DELETE",
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                const updatedNotes = notes.filter(note => note.id !== id);
+                setNotes(updatedNotes);
+                console.log("Note permanently deleted");
+            } else {
+                const data = await response.json();
+                console.error("Failed to delete:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching notes:", error);
+        }
+
     };
     const toggleMenu = (id) => {
         setOpenMenuId(openMenuId === id ? null : id);
@@ -142,7 +173,7 @@ export default function NoteList({
                                                     }}
                                                     className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-600 hover:text-white rounded-b-lg"
                                                 >
-                                                    Delete Forever
+                                                    Permanent Delete
                                                 </button>
                                             </div>
                                         )}
