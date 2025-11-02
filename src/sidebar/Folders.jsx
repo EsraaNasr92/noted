@@ -51,22 +51,36 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
         setEditedTitle(folder.title);
     }
     // save folder after editing
-    const handleEditSave = (folderId) => {
+    const handleEditSave = async (folderId) => {
         if (!editedTitle.trim()) return;
 
-        const updatedFolders = folders.map((f) =>
-            f.id === folderId ? { ...f, title: editedTitle.trim() } : f
-        );
-        setFolders(updatedFolders);
+        try {
+            const response = await fetch(`http://localhost:5000/api/folders/${folderId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: editedTitle.trim() }),
+            });
 
-        // ✅ Fix: Update selected folder if it's the same one being edited
-        const oldFolder = folders.find(f => f.id === folderId);
-        if (selectedFolder === oldFolder?.title) {
-            setSelectedFolder(editedTitle.trim());
+            const data = await response.json();
+
+            if(!response.ok) throw new Error(data.massage || "Failed to rename folder");
+
+            const updatedFolders = folders.map((f) =>
+                f.id === folderId ? { ...f, title: editedTitle.trim() } : f
+            );
+            setFolders(updatedFolders);
+
+            // ✅ Fix: Update selected folder if it's the same one being edited
+            const oldFolder = folders.find(f => f.id === folderId);
+            if (selectedFolder === oldFolder?.title) {
+                setSelectedFolder(editedTitle.trim());
+            }
+
+            setEditingFolderId(null);
+            setEditedTitle("");
+        } catch (error) {
+            console.error("Error renaming folder:", error);
         }
-
-        setEditingFolderId(null);
-        setEditedTitle("");
     }
     // Delete folder
     const handleDeleteFolder = async (folderId) => {
