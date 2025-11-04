@@ -18,8 +18,13 @@ export default function App() {
 
     return (
         <div className="h-screen text-white">
-            <div className="grid grid-cols-[19rem_minmax(0,1fr)_minmax(0,3fr)] h-full">
-                <div className="border-r border-gray-700 flex flex-col">
+            <div className="grid h-full
+                            grid-cols-1
+                            sm-grid-cols-[15rem_minmax(0, 1fr)]
+                            md:grid-cols-[19rem_minmax(0,1fr)]
+                            lg:grid-cols-[19rem_minmax(0,1fr)_minmax(0,3fr)]"
+            >
+                <div className="border-r border-gray-700 flex flex-col min-w-0">
                     <Header
                         notes={notes}
                         setNotes={setNotes}
@@ -48,7 +53,7 @@ export default function App() {
                         setShowDeletedNotes={setShowDeletedNotes}
                     />
                 </div>
-                <div className="border-r border-gray-800 overflow-y-auto bg-(--color--columnsBackground) p-5">
+                <div className="border-r border-gray-800 lg:overflow-y-auto bg-(--color--columnsBackground) p-5 min-w-0">
                     <div className="p-4 top-0 z-10">
                         <h2 className="text-xl font-semibold">
                         {selectedFolder === "All"
@@ -70,7 +75,7 @@ export default function App() {
                         setShowDeletedNotes={showDeletedNotes}
                     />
                 </div>
-                <div className="overflow-y-auto p-8">
+                <div className="lg:overflow-y-auto p-8 min-w-0">
                     <NoteCard
                         selectedID={selectedID}
                         setSelectedID={setSelectedID}
