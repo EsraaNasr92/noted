@@ -1,5 +1,12 @@
 import express from "express";
-import { deleteNote, getNotes, permanentlyDelete, restoreNote, updatedNote } from "../controllers/noteControllers.js";
+import {
+    deleteNote,
+    editNote,
+    getNotes,
+    permanentlyDelete,
+    restoreNote,
+    updatedNote
+} from "../controllers/noteControllers.js";
 import Note from "../models/Note.js";
 
 
@@ -37,5 +44,7 @@ router.patch("/:id/delete", deleteNote);
 router.patch("/:id", updatedNote);
 router.patch("/:id/restore", restoreNote);
 router.delete("/:id", permanentlyDelete);
+
+router.patch("/:id/edit", editNote);
 
 export default router;

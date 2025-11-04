@@ -124,3 +124,48 @@ export const restoreNote = async (req, res) => {
         res.status(500).json({ message: "Failed to restore note" });
     }
 };
+
+export const editNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, date, folder, description } = req.body;
+
+        const updateData = {};
+
+        // Include only provided fields
+        if (title && title.trim()) updateData.title = title.trim();
+        if (description && description.trim()) updateData.description = description.trim();
+        if (date) updateData.date = new Date(date);
+        if (folder) updateData.folder = folder;
+
+        // Always update the "updatedAt" timestamp
+        updateData.updatedAt = new Date();
+
+        // Check if anything valid to update
+        if (Object.keys(updateData).length === 1 && updateData.updatedAt) {
+            return res.status(400).json({ message: "No valid fields provided for update" });
+        }
+
+        // Determine ID type (numeric vs ObjectId)
+        const filter = !isNaN(Number(id)) ? { id: Number(id) } : { _id: id };
+
+        const updatedNote = await Note.findOneAndUpdate(
+            filter,
+            { $set: updateData },
+            { new: true }
+        ).populate("folder", "title");
+
+        if (!updatedNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        res.status(200).json({
+            message: "Note updated successfully",
+            note: updatedNote,
+        });
+    } catch (error) {
+        console.error("❌ Error editing note:", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+

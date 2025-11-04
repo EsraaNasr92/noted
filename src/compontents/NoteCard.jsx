@@ -90,11 +90,36 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
     if (!card) return <p>Note not found</p>;
 
     // helper: update note(s) and persist
-    const updateNotes = (patch) => {
-        const updatedNotes = notes.map((note) => (note.id === selectedID ? { ...note, ...patch } : note));
-        setNotes(updatedNotes);
-        localStorage.setItem("notes", JSON.stringify(updatedNotes));
+    const updateNotes = async (fields) => {
+        // Format date correctly
+        if (fields.date) {
+            // ensure correct ISO date format for backend
+            fields.date = new Date(fields.date).toISOString().split("T")[0];
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/notes/${selectedID}/edit`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(fields), // send directly, not wrapped
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.message || "Failed to edit note");
+
+            const updatedNotes = notes.map((note) =>
+                note.id === selectedID ? { ...note, ...data.note } : note
+            );
+            setNotes(updatedNotes);
+
+            localStorage.setItem("notes", JSON.stringify(updatedNotes));
+            console.log("Note updated:", data.note);
+        } catch (error) {
+            console.error("Error updating notes:", error);
+        }
     };
+
 
     const handleOptions = () => {
         setShowOptions((prev) => !prev);
@@ -204,9 +229,17 @@ const handleAddToArchive = async () => {
     };
 
     const saveDate = () => {
-        if (editableDate !== card.date) updateNotes({ date: editableDate });
+        const formattedDate = editableDate
+            ? new Date(editableDate).toISOString().split("T")[0]
+            : "";
+
+        if (formattedDate !== card.date) {
+            updateNotes({ date: formattedDate });
+        }
+
         setEditingDate(false);
     };
+
 
     const saveFolder = (newFolder) => {
         // allow passing newFolder (from select change) or use editableFolder
@@ -337,12 +370,13 @@ const handleAddToArchive = async () => {
                             {editingDate ? (
                                 <input
                                     type="date"
-                                    value={editableDate}
-                                    onChange={(e) => {
+                                    value={editableDate ? editableDate.split("T")[0]: ""}
+/*                                     onChange={(e) => {
                                         const newValue = e.target.value;
                                         setEditableDate(newValue);
                                         saveDate(newValue);
-                                    }}
+                                    }} */
+                                    onChange={(e) => setEditableDate(e.target.value)}
                                     onBlur={() => saveDate()}
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter")
@@ -353,6 +387,7 @@ const handleAddToArchive = async () => {
                                         }
                                     }}
                                     className="ml-3 bg-transparent border-b border-gray-500 text-white focus:outline-none"
+                                    autoFocus
                                 />
                             ) : (
                                 <div className="ml-3 text-white font-semibold underline">
@@ -360,7 +395,7 @@ const handleAddToArchive = async () => {
                                         className="cursor-pointer"
                                         onDoubleClick={() => setEditingDate(true)}
                                     >
-                                        {editableDate}
+                                        {editableDate ? editableDate.split("T")[0]: "No date set"}
                                     </span>
                                 </div>
                             )}

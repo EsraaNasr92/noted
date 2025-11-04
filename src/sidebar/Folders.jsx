@@ -63,7 +63,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
             const data = await response.json();
 
-            if(!response.ok) throw new Error(data.massage || "Failed to rename folder");
+            if(!response.ok) throw new Error(data.message || "Failed to rename folder");
 
             const updatedFolders = folders.map((f) =>
                 f.id === folderId ? { ...f, title: editedTitle.trim() } : f

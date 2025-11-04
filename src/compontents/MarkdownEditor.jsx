@@ -28,23 +28,45 @@ export default function MarkdownEditor({ selectedID, setSelectedID, notes, setNo
     }, [card]);
     
     // Save note to localStorage
-    const handleSave = () => {
+    const handleSave = async () => {
         if(!card) return;
-        localStorage.setItem(`note_${card.id}`, markdown);
-        //setSavedNote(markdown);
-        setIsPreview(true);
-        setIsSaved(true);
-        console.log("Note saved");
+        try {
+            localStorage.setItem(`note_${card.id}`, markdown);
+            //setSavedNote(markdown);
+            setIsPreview(true);
+            setIsSaved(true);
+            console.log("Note saved locally");
 
-        // Update in parent notes state
-        const updatedNotes = notes.map((n) =>
-            n.id === card.id ? { ...n, description: markdown } : n
-        );
+            // Update in parent notes state
+            const updatedNotes = notes.map((n) =>
+                n.id === card.id ? { ...n, description: markdown } : n
+            );
 
-        setNotes(updatedNotes);
-        localStorage.setItem("notes", JSON.stringify(updatedNotes));
+            setNotes(updatedNotes);
 
-        console.log(`Note ${card.id} saved`);
+            // ✅ Save to backend
+            const response = await fetch(`http://localhost:5000/api/notes/${card.id}/edit`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ description: markdown }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("❌ Error saving note:", data.message);
+                return;
+            }
+
+            console.log("✅ Note saved to DB:", data.note);
+            
+            localStorage.setItem("notes", JSON.stringify(updatedNotes));
+
+            console.log(`Note ${card.id} saved`);
+        } catch (error) {
+            
+        }
+
     }
 
     // Handle preview toggle
