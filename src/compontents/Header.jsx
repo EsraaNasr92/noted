@@ -17,22 +17,26 @@ export default function Header( { notes, setNotes, folders } ){
     const toggleSearch = () => {
         setShowSearch((prev) => !prev);
         setSearchQuery("");
-        setNotes(allNotes);
+        //setNotes(allNotes);
     }
 
     // Search function
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         const value = e.target.value;
         setSearchQuery(value);
 
-        if(!value.trim()){
-            setNotes(allNotes);
-            return;
+        try {
+            const url = value.trim()
+            ? `http://localhost:5000/api/notes?search=${encodeURIComponent(value)}`
+            : "http://localhost:5000/api/notes";
+
+            const res = await fetch(url);
+            const data = await res.json();
+            setNotes(data);
+
+        } catch (error) {
+            console.error("Search failed", error);
         }
-        const filtered = allNotes.filter((note) =>
-            note.title.toLowerCase().includes(value.toLowerCase())
-        );
-        setNotes(filtered);
     }
     // For add new note validation
     const validateFields = () => {
