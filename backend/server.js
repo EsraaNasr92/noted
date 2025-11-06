@@ -1,14 +1,15 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import connectDB from "./db.js";
+import connectDB from "./config/db.js";
 import folderRoutes from "./routes/folderRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
 
+// Load environment variables first
+dotenv.config();
+
 // Connect to MongoDB
 connectDB();
-
-dotenv.config();
 
 const app = express();
 
@@ -16,30 +17,24 @@ const app = express();
 app.use(
     cors({
         origin: [
-        "http://localhost:5173",   // local dev (Vite)
-        "http://localhost:3000",   // local dev (CRA)
-        "noted-leakm9w2p-esraanasr92s-projects.vercel.app" // your deployed frontend domain
+        "http://localhost:5173", // Vite
+        "http://localhost:3000", // CRA
+        "https://noted-eight.vercel.app" // ✅ must include https:// for deployed site
         ],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     })
-); // allow frontend access
+);
 app.use(express.json());
 
+// Routes
 app.use("/api/notes", noteRoutes);
 app.use("/api/folders", folderRoutes);
 
-// Connect to MongoDB
-/* mongoose
-    .connect("mongodb://localhost:27017/noted_app")
-    .then(() => console.log("MongoDB Connected"))
-    .catch((err) => console.error("MongoDB Connection Error:", err)); */
-
-// Basic route
+// Test route
 app.get("/", (req, res) => {
-    res.send("Server is running");
+    res.send("✅ Server is running");
 });
 
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
