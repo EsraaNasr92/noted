@@ -2,8 +2,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import connectDB from "./db.js";
 import folderRoutes from "./routes/folderRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
+
+// Connect to MongoDB
+connectDB();
 
 dotenv.config();
 
