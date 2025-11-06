@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_BASE from "../apiConfig.js";
 
 export default function Header( { notes, setNotes, folders } ){
     const [newNote, setNewNote] = useState({
@@ -59,7 +60,7 @@ export default function Header( { notes, setNotes, folders } ){
         setErrors({}); // clear error and add note
 
         try {
-            const res = await fetch("http://localhost:5000/api/notes", {
+            const res = await fetch(`${API_BASE}/api/notes`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({

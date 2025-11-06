@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import API_BASE from "../apiConfig.js";
 
 // folder section in sidebar
 export default function Folder({ folders, setFolders, setSelectedFolder, selectedFolder }){
@@ -23,7 +24,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
         if (!newFolder.trim()) return; // To prevent empty input
         try {
-            const res = await fetch("http://localhost:5000/api/folders", {
+            const res = await fetch(`${API_BASE}/api/folders`, {
                 method: "POST",
                 headers:{"Content-Type": "application/json"},
                 body: JSON.stringify({ title: newFolder}),

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-
+import API_BASE from "../apiConfig.js";
 // List of notes in the middle section
 export default function NoteList({
     selectedID,
@@ -31,7 +31,7 @@ export default function NoteList({
         // Fetch Notes from database
         async function fetchNotes(){
             try {
-                const response = await fetch("http://localhost:5000/api/notes");
+                const response = await fetch(`${API_BASE}/api/notes`);
                 const data = await response.json();
 
                 // Normalize MongoDB _id to id

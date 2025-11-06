@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import API_BASE from "../apiConfig.js";
 import MarkdownEditor from './MarkdownEditor';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
@@ -10,7 +11,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         // Fetch folder name from database
         async function fetchFolder(){
             try {
-                const response = await fetch("http://localhost:5000/api/folders");
+                const response = await fetch(`${API_BASE}/api/folders`);
                 const data = await response.json();
 
                 // Normalize MongoDB _id to id
