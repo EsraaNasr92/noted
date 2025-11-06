@@ -1,7 +1,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
 import connectDB from "./db.js";
 import folderRoutes from "./routes/folderRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
@@ -31,10 +30,10 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/folders", folderRoutes);
 
 // Connect to MongoDB
-mongoose
+/* mongoose
     .connect("mongodb://localhost:27017/noted_app")
     .then(() => console.log("MongoDB Connected"))
-    .catch((err) => console.error("MongoDB Connection Error:", err));
+    .catch((err) => console.error("MongoDB Connection Error:", err)); */
 
 // Basic route
 app.get("/", (req, res) => {
