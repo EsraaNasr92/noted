@@ -28,8 +28,8 @@ export default function Header( { notes, setNotes, folders } ){
 
         try {
             const url = value.trim()
-            ? `http://localhost:5000/api/notes?search=${encodeURIComponent(value)}`
-            : "http://localhost:5000/api/notes";
+            ? `${API_BASE}/api/notes?search=${encodeURIComponent(value)}`
+            : `${API_BASE}/api/notes1;
 
             const res = await fetch(url);
             const data = await res.json();

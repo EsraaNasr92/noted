@@ -57,7 +57,7 @@ export default function NoteList({
     // Restore note
     const handleRestore = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/notes/${id}/restore`, {
+            const response = await fetch(`${API_BASE}/api/notes/${id}/restore`, {
                 method: "PATCH",
             });
 
@@ -88,7 +88,7 @@ export default function NoteList({
         const confirmDelete = window.confirm("Are you sure you want to permanently delete this note?");
         try {
 
-            const response = await fetch(`http://localhost:5000/api/notes/${id}`, {
+            const response = await fetch(`${API_BASE}/api/notes/${id}`, {
                 method: "DELETE",
             });
             const data = await response.json();

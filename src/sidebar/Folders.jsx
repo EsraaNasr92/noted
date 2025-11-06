@@ -56,7 +56,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
         if (!editedTitle.trim()) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/folders/${folderId}`, {
+            const response = await fetch(`${API_BASE}/api/folders/${folderId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title: editedTitle.trim() }),
@@ -86,7 +86,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
     // Delete folder
     const handleDeleteFolder = async (folderId) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/folders/${folderId}`, {
+            const res = await fetch(`${API_BASE}/api/folders/${folderId}`, {
                 method: "DELETE",
             });
             const data = await res.json();

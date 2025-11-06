@@ -99,7 +99,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/notes/${selectedID}/edit`, {
+            const response = await fetch(`${API_BASE}/api/notes/${selectedID}/edit`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(fields), // send directly, not wrapped
@@ -131,7 +131,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         const updatedValue = !card.isFavorite;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
+            const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ isFavorite: updatedValue }),
@@ -162,7 +162,7 @@ const handleAddToArchive = async () => {
     const updatedValue = !card.isArchive;
 
     try {
-        const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
+        const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isArchive: updatedValue }),
@@ -194,7 +194,7 @@ const handleAddToArchive = async () => {
 
         try {
             // Mark as deleted (don't remove from database)
-            const response = await fetch(`http://localhost:5000/api/notes/${selectedID}`, {
+            const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json "},
                 body: JSON.stringify({

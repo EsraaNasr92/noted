@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import API_BASE from "../apiConfig.js";
 import Toolbar from "./Toolbar";
 
 export default function MarkdownEditor({ selectedID, setSelectedID, notes, setNotes }) {
@@ -45,7 +46,7 @@ export default function MarkdownEditor({ selectedID, setSelectedID, notes, setNo
             setNotes(updatedNotes);
 
             // ✅ Save to backend
-            const response = await fetch(`http://localhost:5000/api/notes/${card.id}/edit`, {
+            const response = await fetch(`${API_BASE}/api/notes/${card.id}/edit`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ description: markdown }),
