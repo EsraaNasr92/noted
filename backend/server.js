@@ -21,7 +21,7 @@ app.use(
         "http://localhost:3000", // CRA
         "https://noted-eight.vercel.app" // ✅ must include https:// for deployed site
         ],
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         credentials: true,
     })
 );

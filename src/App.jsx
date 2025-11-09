@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import Header from './compontents/Header';
 import NoteCard from './compontents/NoteCard';
 import NoteList from './compontents/NoteList';
@@ -25,11 +27,13 @@ export default function App() {
                             lg:grid-cols-[19rem_minmax(0,1fr)_minmax(0,3fr)]"
             >
                 <div className="border-r border-gray-700 flex flex-col min-w-0">
+                    <ToastContainer />
                     <Header
                         notes={notes}
                         setNotes={setNotes}
                         folders={folders}
                         setFolders={setFolders}
+                        toast={toast}
                     />
                     <Recents
                         notes= {notes}
@@ -45,6 +49,7 @@ export default function App() {
                             setShowDeletedNotes(false);
                         }}
                         selectedFolder={selectedFolder}
+                        toast={toast}
                     />
                     <MoreOptions
                         setShowFavorites={setShowFavorites}

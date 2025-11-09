@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import API_BASE from "../apiConfig.js";
 
 // folder section in sidebar
-export default function Folder({ folders, setFolders, setSelectedFolder, selectedFolder }){
+export default function Folder({ folders, setFolders, setSelectedFolder, selectedFolder, toast }){
     const [newFolder, setNewFolder] = useState("");
     const [showInput, setShowInput] = useState(false);
     const [editingFolderId, setEditingFolderId] = useState(null);
@@ -42,8 +42,11 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
             setShowInput(false)
             setNewFolder("");
 
+            // Show success notification
+            toast.success("Added new folder successfully!");
+
         } catch (err) {
-            console.error("Error adding folder:", err);
+            toast.error("Error adding folder:");
         }
     }
 
@@ -79,8 +82,11 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
             setEditingFolderId(null);
             setEditedTitle("");
+            
+            // Edit folder
+            toast.success("Folder edited successfully")
         } catch (error) {
-            console.error("Error renaming folder:", error);
+            console.error("Error renaming folder");
         }
     }
     // Delete folder
@@ -96,10 +102,10 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
             const updatedFolders = folders.filter((f) => f.id !== folderId && f._id !== folderId);
             setFolders(updatedFolders);
 
-            console.log("Folder delete Successfully", data);
+            toast.success("Folder deleted Successfully");
             
         } catch (error) {
-            console.error("Error deleting Folder:", error);
+            toast.error("Error deleting Folder");
         }
     };
     return(

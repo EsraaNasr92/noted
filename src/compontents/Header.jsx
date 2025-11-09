@@ -1,7 +1,7 @@
 import { useState } from "react";
 import API_BASE from "../apiConfig.js";
 
-export default function Header( { notes, setNotes, folders } ){
+export default function Header( { notes, setNotes, folders, toast } ){
     const [newNote, setNewNote] = useState({
         title: "",
         description: "",
@@ -86,8 +86,12 @@ export default function Header( { notes, setNotes, folders } ){
         setNotes(prev => [...prev, newCardObj]);
         setNewNote({ title: "", description: "", date: "", folder: "" });
         setShowAddNote(false);
+
+        // Show success notification
+        toast.success("Note added successfully!");
+        
         } catch (err) {
-            console.error("Error adding note:", err);
+            toast.error("Failed to add note!");
             setErrors({ general: "Failed to add note, please try again" });
         }
     }
