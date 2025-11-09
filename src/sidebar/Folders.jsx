@@ -7,11 +7,27 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
     const [showInput, setShowInput] = useState(false);
     const [editingFolderId, setEditingFolderId] = useState(null);
     const [editedTitle, setEditedTitle] = useState("");
+    const [loading, setLoading] = useState(true); // loading folders
 
-    // Load folder from local storage
+    // Load folder from databse first
     useEffect(() => {
-        const saveFolders = JSON.parse(localStorage.getItem("folder")) || [];
-        if(saveFolders.length > 0) setFolders(saveFolders);
+        const fetchFolders = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/folders`);
+                if(!res.ok) throw new Error("Failed to fetch folders");
+                const data = await res.json();
+
+                setFolders(data);
+                localStorage.setItem("folder", JSON.stringify(data));
+            } catch (err) {
+                console.error("DB fetch failed, loading from localStorage", err);
+                const saveFolders = JSON.parse(localStorage.getItem("folder")) || [];
+                setFolders(saveFolders);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchFolders();
     }, []);
     
     // Save folder to localStorage

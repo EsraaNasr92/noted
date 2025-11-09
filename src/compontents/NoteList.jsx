@@ -13,6 +13,33 @@ export default function NoteList({
     }) {
     
     const [openMenuId, setOpenMenuId] = useState(null); // Dropdown menu for the delete options
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        const fetchNotes = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/notes`);
+                if (!res.ok) throw new Error("Failed to fetch notes");
+
+                const data = await res.json();
+
+                const normalized = data.map(note => ({ ...note, id: note._id }));
+                setNotes(normalized);
+
+                // optional cache
+                localStorage.setItem("notes", JSON.stringify(normalized));
+            } catch (err) {
+                console.error("DB fetch failed, loading from localStorage", err);
+                const cached = JSON.parse(localStorage.getItem("notes")) || [];
+                setNotes(cached);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchNotes();
+    }, [setNotes]);
+
     let filteredNotes = notes;
 
     if (showFavorites) {
@@ -27,32 +54,7 @@ export default function NoteList({
         );
     }
 
-    useEffect(() => {
-        // Fetch Notes from database
-        async function fetchNotes(){
-            try {
-                const response = await fetch(`${API_BASE}/api/notes`);
-                const data = await response.json();
-
-                // Normalize MongoDB _id to id
-                const normalized = data.map((note) => ({
-                    ...note,
-                    id: note._id,
-                }));
-
-                setNotes(normalized);
-            } catch (err) {
-                console.error("Error fetching notes:", err);
-            }
-        }
-        fetchNotes();
-
-        const handleClickOutside  = () => setOpenMenuId(null);
-        window.addEventListener("click", handleClickOutside);
-        return() => {
-            window.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
+    if (loading) return <p className="px-4 text-gray-500">Loading notes...</p>;
 
     // Restore note
     const handleRestore = async (id) => {
