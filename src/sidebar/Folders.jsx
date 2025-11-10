@@ -124,6 +124,9 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
             toast.error("Error deleting Folder");
         }
     };
+    
+    if (loading) return <p className="px-4 text-gray-500">Loading folders name...</p>;
+
     return(
         <div className="mt-8">
             <h3 className="flex items-center justify-between text-md text-gray-400 mb-5 px-4">Folders
