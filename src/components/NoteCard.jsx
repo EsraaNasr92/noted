@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import API_BASE from "../apiConfig.js";
-import MarkdownEditor from './MarkdownEditor';
+import MarkdownEditor from './MarkdownEditor.jsx';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
 export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, folders, setFolders }) {

@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import API_BASE from "../apiConfig.js";
-import Toolbar from "./Toolbar";
+import Toolbar from "./Toolbar.jsx";
 
 export default function MarkdownEditor({ selectedID, setSelectedID, notes, setNotes }) {
     const card = notes.find((c) => c.id === selectedID); // get editor and description based on card ID

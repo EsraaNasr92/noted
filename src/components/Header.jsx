@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import API_BASE from "../apiConfig.js";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Header( { notes, setNotes, folders, toast } ){
     const [newNote, setNewNote] = useState({
@@ -13,7 +14,8 @@ export default function Header( { notes, setNotes, folders, toast } ){
     const [showSearch, setShowSearch] = useState(false);
     const [searchQuery, setSearchQuery]= useState("");
     const[allNotes, setAllNotes]= useState(notes); // Store original list for a search
-
+    const { logout, user } = useContext(AuthContext);
+    
     // Show/hidden search input
     const toggleSearch = () => {
         setShowSearch((prev) => !prev);
@@ -230,6 +232,8 @@ export default function Header( { notes, setNotes, folders, toast } ){
                     </div>
                 </div>
             )}
+
+
         </>
     )
 }
