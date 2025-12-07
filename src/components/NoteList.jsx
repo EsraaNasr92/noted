@@ -18,7 +18,16 @@ export default function NoteList({
     useEffect(() => {
         const fetchNotes = async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/notes`);
+                const token = localStorage.getItem("token");
+
+                const res = await fetch(`${API_BASE}/api/notes`, {
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
+
+
                 if (!res.ok) throw new Error("Failed to fetch notes");
 
                 const data = await res.json();

@@ -62,9 +62,13 @@ export default function Header( { notes, setNotes, folders, toast } ){
         setErrors({}); // clear error and add note
 
         try {
+            const token = localStorage.getItem("token"); // token saved on login
             const res = await fetch(`${API_BASE}/api/notes`, {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     title: newNote.title.trim(),
                     description: newNote.description.trim(),
@@ -95,6 +99,7 @@ export default function Header( { notes, setNotes, folders, toast } ){
         } catch (err) {
             toast.error("Failed to add note!");
             setErrors({ general: "Failed to add note, please try again" });
+            console.error("Add note error: ", err);
         }
     }
 

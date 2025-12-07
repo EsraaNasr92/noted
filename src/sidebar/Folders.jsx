@@ -13,7 +13,13 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
     useEffect(() => {
         const fetchFolders = async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/folders`);
+                const token = localStorage.getItem("token"); // token saved on login
+                const res = await fetch(`${API_BASE}/api/folders`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
                 if(!res.ok) throw new Error("Failed to fetch folders");
                 const data = await res.json();
 
@@ -40,9 +46,13 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
         if (!newFolder.trim()) return; // To prevent empty input
         try {
+            const token = localStorage.getItem("token"); // token saved on login
             const res = await fetch(`${API_BASE}/api/folders`, {
                 method: "POST",
-                headers:{"Content-Type": "application/json"},
+                headers:{
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ title: newFolder}),
             });
             const saveFolder =  await res.json();
@@ -63,6 +73,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
         } catch (err) {
             toast.error("Error adding folder:");
+            console.error("Adding folder error: ", err)
         }
     }
 
@@ -75,9 +86,13 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
         if (!editedTitle.trim()) return;
 
         try {
+            const token = localStorage.getItem("token");
             const response = await fetch(`${API_BASE}/api/folders/${folderId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ title: editedTitle.trim() }),
             });
 
@@ -108,8 +123,12 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
     // Delete folder
     const handleDeleteFolder = async (folderId) => {
         try {
+            const token = localStorage.getItem("token");
             const res = await fetch(`${API_BASE}/api/folders/${folderId}`, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
             });
             const data = await res.json();
 
@@ -122,6 +141,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
             
         } catch (error) {
             toast.error("Error deleting Folder");
+            console.error("Delete folder error:", error);
         }
     };
     

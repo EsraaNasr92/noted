@@ -3,7 +3,10 @@ import Note from "../models/Note.js";
 export const getNotes = async(req, res) => {
     try{
         const { search } = req.query; // read ?search= fro URL
-        const query = {};
+        const query = {
+            userId: req.userId,
+            isDeleted: false // Get only active notes
+        };
 
         if(search){
             query.$or = [
@@ -12,7 +15,7 @@ export const getNotes = async(req, res) => {
             ];
         }
         // Fetch notes with optional search filter
-        const notes = await Note.find(query).populate("folder", "title"); // to get the folder title
+        const notes = await Note.find({ userId: req.userId }).populate("folder", "title"); // to get the folder title
         res.status(200).json(notes);
     }catch(error){
         res.status(500).json({ message: error.message });
@@ -21,18 +24,20 @@ export const getNotes = async(req, res) => {
 
 export const deleteNote = async (req, res) => {
     try {
-        const { id } = req.params;
+        //const { id } = req.params;
 
+        const note = await Note.findOne({
+            _id: req.params.id,
+            userId: req.userId,
+        });
         // Try numeric ID first, fallback to MongoDB _id
-        let note = null;
+/*         let note = null;
 
         if (!isNaN(Number(id))) {
-            // Numeric ID (e.g. 1, 2, 3)
             note = await Note.findOne({ id: Number(id) });
         } else {
-            // MongoDB ObjectId (string)
             note = await Note.findById(id);
-        }
+        } */
 
         if (!note) {
         return res.status(404).json({ message: "Note not found" });
@@ -61,9 +66,10 @@ export const updatedNote = async (req, res) => {
 
         const updated = await Note.findOneAndUpdate(
         filter,
+        {_id: req.params.id, userId: req.userId},
         { $set: req.body },
         { new: true }
-        );
+        ).populate("folder", "title");
 
         if (!updated)
         return res.status(404).json({ message: "Note not found" });
@@ -77,21 +83,24 @@ export const updatedNote = async (req, res) => {
 
 export const permanentlyDelete = async (req, res) => {
     try {
-        const { id } = req.params;
+/*         const { id } = req.params;
 
-        // Try numeric ID first, fallback to MongoDB _id
         let note = null;
 
         if (!isNaN(Number(id))) {
-            // Numeric ID (e.g. 1, 2, 3)
             note = await Note.findOne({ id: Number(id) });
         } else {
-            // MongoDB ObjectId (string)
             note = await Note.findById(id);
-        }
+        } */
+
+        const note = await Note.findOne({
+            _id: req.params.id,
+            userId: req.userId,
+            isDeleted: true,
+        });
 
         if (!note) {
-            return res.status(404).json({ message: "Note not found" });
+            return res.status(404).json({ message: "Note not found or not in trash" });
         }
 
         // Permanently Delete
@@ -117,6 +126,7 @@ export const restoreNote = async (req, res) => {
 
         const restoredNote = await Note.findOneAndUpdate(
             filter,
+            {_id: req.params.id, userId: req.userId},
             { $set: { isDeleted: false } },
             { new: true }
         );
@@ -140,16 +150,15 @@ export const editNote = async (req, res) => {
         const { id } = req.params;
         const { title, date, folder, description } = req.body;
 
-        const updateData = {};
+        const updateData = {
+            updatedAt: new Date()
+        };
 
         // Include only provided fields
         if (title && title.trim()) updateData.title = title.trim();
         if (description && description.trim()) updateData.description = description.trim();
         if (date) updateData.date = new Date(date);
         if (folder) updateData.folder = folder;
-
-        // Always update the "updatedAt" timestamp
-        updateData.updatedAt = new Date();
 
         // Check if anything valid to update
         if (Object.keys(updateData).length === 1 && updateData.updatedAt) {
@@ -161,6 +170,7 @@ export const editNote = async (req, res) => {
 
         const updatedNote = await Note.findOneAndUpdate(
             filter,
+            {_id: req.params.id, userId: req.userId},
             { $set: updateData },
             { new: true }
         ).populate("folder", "title");

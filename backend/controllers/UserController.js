@@ -22,7 +22,13 @@ export const signup = async (req, res) => {
             password: hashedPassword,
         });
 
-        res.status(201).json({ message: "User created", user: newUser });
+        res.status(201).json({
+            message: "User created",
+            user: {
+                name: newUser.name,
+                email: newUser.email
+            }
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -41,14 +47,15 @@ export const login = async (req, res) => {
         if (!isMatch)
             return res.status(400).json({ message: "Invalid email or password" });
 
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
         res.json({
                 message: "Login successful",
                 token,
                 user: {
                     name: user.name,
-                    email: user.email
+                    email: user.email,
+                    _id: user._id
                 }
         });
     } catch (err) {

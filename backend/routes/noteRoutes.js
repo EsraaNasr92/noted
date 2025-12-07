@@ -7,29 +7,29 @@ import {
     restoreNote,
     updatedNote
 } from "../controllers/noteControllers.js";
+import auth from "../middleware/auth.js";
 import Note from "../models/Note.js";
-
 
 const router = express.Router();
 
 // Get all notes
-router.get("/", getNotes);
+router.get("/", auth, getNotes);
 
 // Post a new note
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     try {
         const { title, description, date, folder } = req.body;
 
         // Find the last note to auto-generate a numeric ID
-        const lastNote = await Note.findOne().sort({ id: -1 });
+        const lastNote = await Note.findOne({ userId: req.userId }).sort({ id: -1 });
         const newId = lastNote ? lastNote.id + 1 : 1;
 
         const newNote = new Note({
-        id: newId,
-        title,
-        description,
-        date,
-        folder,
+            id: newId,
+            title,
+            description,
+            date,
+            folder,
         });
 
         const saved = await newNote.save();

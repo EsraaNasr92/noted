@@ -11,7 +11,14 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         // Fetch folder name from database
         async function fetchFolder(){
             try {
-                const response = await fetch(`${API_BASE}/api/folders`);
+                const token = localStorage.getItem("token");
+
+                const response = await fetch(`${API_BASE}/api/folders`, {
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
                 const data = await response.json();
 
                 // Normalize MongoDB _id to id
