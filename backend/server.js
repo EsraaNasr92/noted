@@ -6,10 +6,10 @@ import folderRoutes from "./routes/folderRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
-// Load environment variables first
+// Load env
 dotenv.config();
 
-// Connect to MongoDB
+// Connect DB
 connectDB();
 
 const app = express();
@@ -18,13 +18,14 @@ const app = express();
 app.use(
     cors({
         origin: [
-        "http://localhost:5173", // Vite
-        "https://noted-eight.vercel.app" // ✅ must include https:// for deployed site
+            "http://localhost:5173",
+            "https://noted-eight.vercel.app"
         ],
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         credentials: true,
     })
 );
+
 app.use(express.json());
 
 // Routes
@@ -37,5 +38,18 @@ app.get("/", (req, res) => {
     res.send("✅ Server is running");
 });
 
+// -------------------------------
+// Run server locally only
+// -------------------------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Local server running on port ${PORT}`);
+    });
+}
+
+// -------------------------------
+// Export for Vercel
+// -------------------------------
+export default app;
