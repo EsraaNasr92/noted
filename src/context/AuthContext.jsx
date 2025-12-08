@@ -4,14 +4,19 @@ import { setAuthToken } from "../api/auth";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
     const [token, setToken] = useState(() => localStorage.getItem("token"));
+    const [user, setUser] = useState(() => {
+        try {
+            const u = localStorage.getItem("user");
+            return u ? JSON.parse(u) : null;
+        } catch {
+            return null;
+        }
+    });
 
     useEffect(() => {
         if (token) {
             setAuthToken(token);
-        // Optionally decode token to get user info or fetch /me from backend.
-        // setUser({}); // placeholder: or fetch user profile
         } else {
             setAuthToken(null);
             setUser(null);
@@ -20,12 +25,15 @@ export function AuthProvider({ children }) {
 
     const login = (tokenValue, userData) => {
         localStorage.setItem("token", tokenValue);
+        localStorage.setItem("user", JSON.stringify(userData));
+
         setToken(tokenValue);
-        setUser(userData)
+        setUser(userData);
     };
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setToken(null);
         setUser(null);
     };

@@ -20,8 +20,8 @@ export default function Login() {
 
             if (!token) throw new Error("No token returned");
 
-            login(token); // stores token in localStorage + set header
-            setUser(user); // save user object
+            login(token, user); // stores token in localStorage + set header
+            //setUser(user); // save user object
 
             navigate("/dashboard");
         } catch (err) {
