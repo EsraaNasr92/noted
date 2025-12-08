@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const folderSchema = new mongoose.Schema({
     title:{
@@ -12,4 +12,4 @@ const folderSchema = new mongoose.Schema({
     },
 }, {timestamps: true});
 
-export default mongoose.model("Folder", folderSchema);
+module.exports = mongoose.model("Folder", folderSchema);

@@ -1,7 +1,7 @@
-import express from "express";
-import { deleteFolder, getFolder, renameFolder } from "../controllers/folderControllers.js";
-import auth from "../middleware/auth.js";
-import Folder from "../models/Folder.js";
+const express = require("express");
+const { deleteFolder, getFolder, renameFolder } = require("../controllers/folderControllers");
+const auth = require("../middleware/auth");
+const Folder = require("../models/Folder");
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/", auth, getFolder);
 
 // Post new folder name
-router.post("/", auth, async(req, res) => {
+router.post("/", auth, async (req, res) => {
     try {
         const newFolder = new Folder({
             title: req.body.title,
@@ -26,4 +26,4 @@ router.delete("/:id", auth, deleteFolder);
 
 router.patch("/:id", auth, renameFolder);
 
-export default router;
+module.exports = router;

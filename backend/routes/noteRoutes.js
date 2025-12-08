@@ -1,14 +1,14 @@
-import express from "express";
-import {
+const express = require("express");
+const {
     deleteNote,
     editNote,
     getNotes,
     permanentlyDelete,
     restoreNote,
     updatedNote
-} from "../controllers/noteControllers.js";
-import auth from "../middleware/auth.js";
-import Note from "../models/Note.js";
+} = require("../controllers/noteControllers");
+const auth = require("../middleware/auth");
+const Note = require("../models/Note");
 
 const router = express.Router();
 
@@ -47,4 +47,4 @@ router.delete("/:id", permanentlyDelete);
 
 router.patch("/:id/edit", editNote);
 
-export default router;
+module.exports = router;
