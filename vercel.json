@@ -4,7 +4,7 @@
         { "src": "backend/server.js", "use": "@vercel/node" },
         { "src": "package.json", "use": "@vercel/static-build" }
     ],
-    "routes": [
+    "rewrites": [
         { "src": "/api/(.*)", "dest": "backend/server.js" },
         {
             "src": "/[^.]+[^/]$",
