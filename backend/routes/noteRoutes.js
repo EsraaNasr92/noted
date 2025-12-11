@@ -20,25 +20,27 @@ router.post("/", auth, async (req, res) => {
     try {
         const { title, description, date, folder } = req.body;
 
-        // Find the last note to auto-generate a numeric ID
-        const lastNote = await Note.findOne({ userId: req.userId }).sort({ id: -1 });
-        const newId = lastNote ? lastNote.id + 1 : 1;
+        if (!title || !title.trim()) return res.status(400).json({ message: "Title is required" });
+        if (!description || !description.trim()) return res.status(400).json({ message: "Description is required" });
+        if (!folder) return res.status(400).json({ message: "Folder is required" });
 
         const newNote = new Note({
-            id: newId,
-            title,
-            description,
-            date,
+            title: title.trim(),
+            description: description.trim(),
+            date: date ? new Date(date) : new Date(),
             folder,
+            userId: req.userId,
         });
 
         const saved = await newNote.save();
         res.status(201).json(saved);
+
     } catch (err) {
         console.error("Error creating note:", err);
         res.status(400).json({ message: err.message });
     }
 });
+
 
 router.patch("/:id/delete", deleteNote);
 router.patch("/:id", updatedNote);
