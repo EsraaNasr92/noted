@@ -4,7 +4,7 @@ const Note = require("../models/Note");
 const getNotes = async (req, res) => {
     try {
         const { search } = req.query;
-        const query = { userId: req.userId, isDeleted: false };
+        const query = { userId: req.userId};
 
         if (search) {
             query.$or = [
@@ -27,7 +27,10 @@ const deleteNote = async (req, res) => {
         if (!note) return res.status(404).json({ message: "Note not found" });
 
         note.isDeleted = true;
+        note.isArchive = false;
+        note.isFavorite = false;
         await note.save();
+
         res.status(200).json({ message: "Note deleted successfully", note });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -66,7 +69,7 @@ const restoreNote = async (req, res) => {
     try {
         const { id } = req.params;
         const filter = isNaN(Number(id)) ? { _id: id } : { id: Number(id) };
-        const restoredNote = await Note.findOneAndUpdate(filter, { $set: { isDeleted: false } }, { new: true });
+        const restoredNote = await Note.findOneAndUpdate(filter, { $set: { isDeleted: false, isArchive: false, isFavorite: false } }, { new: true });
 
         if (!restoredNote) return res.status(404).json({ message: "Note not found" });
         res.status(200).json({ message: "Note restored successfully", note: restoredNote });

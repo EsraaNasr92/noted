@@ -205,7 +205,9 @@ const handleAddToArchive = async () => {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json "},
                 body: JSON.stringify({
-                    isDeleted: true
+                    isDeleted: true,
+                    isArchive: false,
+                    isFavorite: false,
                 }),
             });
 
