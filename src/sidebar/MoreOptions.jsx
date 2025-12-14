@@ -4,7 +4,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
         <h3 className="text-md text-gray-400 mb-5 px-4">More</h3>
             <ul className="space-y-1">
                 <li
-                    className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    className="flex gap-2 items-center mb-4 py-1 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
                     onClick={() => {
                         setShowFavorites(true);
                         setSelectedFolder("All");
@@ -18,7 +18,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
                                 
                 </li>
                 <li
-                    className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    className="flex gap-2 items-center mb-4 py-1 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
                     onClick={() => {
                         setShowDeletedNotes(true);
                         setSelectedFolder("All");
@@ -32,7 +32,7 @@ export default function MoreOptions({ setShowFavorites, setSelectedFolder, setSh
                     Trash
                 </li>
                 <li
-                    className="flex gap-2 items-center mb-4 py-2 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
+                    className="flex gap-2 items-center mb-4 py-1 text-gray-400 hover:bg-gray-700 rounded cursor-pointer px-4"
                     onClick={() => {
                         setShowArchive(true);
                         setSelectedFolder("All");

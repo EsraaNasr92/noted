@@ -29,18 +29,39 @@ export default function Header( { notes, setNotes, folders, toast } ){
         setSearchQuery(value);
 
         try {
-            const url = value.trim()
-            ? `${API_BASE}/api/notes?search=${encodeURIComponent(value)}`
-            : `${API_BASE}/api/notes1`;
+            const token = localStorage.getItem("token"); // ✅ get token
 
-            const res = await fetch(url);
+            const url = value.trim()
+                ? `${API_BASE}/api/notes?search=${encodeURIComponent(value)}`
+                : `${API_BASE}/api/notes`;
+
+            const res = await fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // ✅ add token
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch notes: ${res.status}`);
+            }
+
             const data = await res.json();
+
+            if (!Array.isArray(data)) {
+                console.error("Invalid data format:", data);
+                setNotes([]); // fallback
+                return;
+            }
+
             setNotes(data);
 
         } catch (error) {
             console.error("Search failed", error);
+            setNotes([]); // fallback
         }
-    }
+    };
+
     // For add new note validation
     const validateFields = () => {
         const newErrors = {};

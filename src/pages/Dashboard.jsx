@@ -93,10 +93,7 @@ export default function Dashboard() {
                         setFolders={setFolders}
                     />
                 </div>
-                
             </div>
-
-            
         </div>
     );
 }

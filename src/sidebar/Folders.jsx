@@ -188,7 +188,7 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
                         key={folder.id || folder._id}
                         onClick={() => setSelectedFolder(folder.id || folder._id)}
                         onDoubleClick={() => handleEditFolder(folder)}
-                        className={`group flex items-center justify-between mb-3 py-2 rounded cursor-pointer px-4 transition-colors duration-150
+                        className={`group flex items-center justify-between mb-3 py-1 rounded cursor-pointer px-4 transition-colors duration-150
                             ${selectedFolder === folder.title
                             ? "bg-[var(--color-secondaryBackgroundHover)] text-white"
                             : "text-gray-400 hover:bg-gray-700"}`}
