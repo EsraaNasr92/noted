@@ -83,6 +83,7 @@ export default function Header( { notes, setNotes, folders, toast } ){
         if(!res.ok) throw new Error(saveNote.message || "Failed to save note");
 
         const newCardObj = {
+            id: saveNote._id,
             title: newNote.title.trim(),
             description: newNote.description.trim(),
             date: newNote.date || new Date().toISOString().split("T")[0], // default to today's date
