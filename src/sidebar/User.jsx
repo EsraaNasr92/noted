@@ -1,18 +1,23 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-export default function User(){
+export default function User({ onClick }) {
     const { logout, user } = useContext(AuthContext);
 
     return (
-        <>
-            <h1 className="text-3xl font-semibold mb-6">Hello {user?.name}</h1>
-                <button
-                    onClick={() => logout()}
-                    className="mt-auto w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                    Logout
-                </button>
-        </>
+        <div className="flex items-center justify-between mb-4 px-5">
+            <span
+                className="text-xl font-semibold cursor-pointer"
+                onClick={onClick}
+            >
+                Hello, {user?.name}
+            </span>
+            <button
+                onClick={logout}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+                Logout
+            </button>
+        </div>
     );
 }

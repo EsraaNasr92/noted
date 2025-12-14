@@ -10,6 +10,7 @@ import Folder from '../sidebar/Folders';
 import MoreOptions from '../sidebar/MoreOptions';
 import Recents from '../sidebar/Recents';
 import User from "../sidebar/User";
+import UserList from "../components/UserList";
 
 export default function Dashboard() {
     const [selectedID, setSelectedID] = useState(null);
@@ -19,6 +20,7 @@ export default function Dashboard() {
     const [showFavorites, setShowFavorites] = useState(false);
     const [showArchive, setShowArchive] = useState(false);
     const [showDeletedNotes, setShowDeletedNotes] = useState(false);
+    const [showUserList, setShowUserList] = useState(false);
 
     return (
         <div className="h-screen text-white">
@@ -59,29 +61,38 @@ export default function Dashboard() {
                         setShowArchive={setShowArchive}
                         setShowDeletedNotes={setShowDeletedNotes}
                     />
-                    <User />
+                    <User onClick={() => setShowUserList(prev => !prev)}/>
                 </div>
                 <div className="border-r border-gray-800 lg:overflow-y-auto bg-(--color--columnsBackground) p-5 min-w-0">
                     <div className="p-4 top-0 z-10">
-                        <h2 className="text-xl font-semibold">
-                            {selectedFolder === "All"
-                                ? "All Notes"
-                                : folders.find((folder) => folder.id === selectedFolder)?.title || "Folder not found"}
-                        </h2>
+                        {showUserList ? (
+                            <UserList />
+                        ): (
+                            <>
+                            <h2 className="text-xl font-semibold">
+                                {selectedFolder === "All"
+                                    ? "All Notes"
+                                    : folders.find((folder) => folder.id === selectedFolder)?.title || "Folder not found"}
+                            </h2>
+                            <NoteList
+                                selectedID={selectedID}
+                                setSelectedID={setSelectedID}
+                                notes={notes}
+                                setNotes={setNotes}
+                                selectedFolder={selectedFolder}
+                                setShowFavorites={setShowFavorites}
+                                showFavorites={showFavorites}
+                                setShowArchive={setShowArchive}
+                                showArchive={showArchive}
+                                showDeletedNotes={showDeletedNotes}
+                                setShowDeletedNotes={setShowDeletedNotes}
+                            />
+                            </>
+
+                        )}
+
                     </div>
-                    <NoteList
-                        selectedID={selectedID}
-                        setSelectedID={setSelectedID}
-                        notes={notes}
-                        setNotes={setNotes}
-                        selectedFolder={selectedFolder}
-                        setShowFavorites={setShowFavorites}
-                        showFavorites={showFavorites}
-                        setShowArchive={setShowArchive}
-                        showArchive={showArchive}
-                        showDeletedNotes={showDeletedNotes}
-                        setShowDeletedNotes={setShowDeletedNotes}
-                    />
+
                 </div>
                 <div className="lg:overflow-y-auto p-8 min-w-0">
                     <NoteCard

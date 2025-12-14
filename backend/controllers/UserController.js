@@ -37,4 +37,16 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { signup, login };
+const getUser = async (req, res) => {
+    try {
+        // req.userId should be set by auth middleware
+        const user = await User.findById(req.userId).select("-password"); // exclude password
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+module.exports = { signup, login, getUser };

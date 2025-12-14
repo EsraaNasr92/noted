@@ -7,7 +7,7 @@ const noteRoutes = require("./routes/noteRoutes");
 const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
-connectDB(); // ✅ should work now
+connectDB();
 
 const app = express();
 
