@@ -97,8 +97,8 @@ export default function Header( { notes, setNotes, folders, toast } ){
         toast.success("Note added successfully!");
         
         } catch (err) {
-            toast.error("Failed to add note!");
-            setErrors({ general: "Failed to add note, please try again" });
+            //toast.error("Failed to add note!");
+            //setErrors({ general: "Failed to add note, please try again" });
             console.error("Add note error: ", err);
         }
     }

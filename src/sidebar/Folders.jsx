@@ -168,24 +168,24 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.5 8H4m0-2v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-5.032a1 1 0 0 1-.768-.36l-1.9-2.28a1 1 0 0 0-.768-.36H5a1 1 0 0 0-1 1Z"/>
                     </svg>
                     <input
-                    value={newFolder}
-                    onChange={(e) => setNewFolder(e.target.value)}
-                    placeholder="Folder name"
-                    className="w-full p-1 mb-4 border-gray-600 bg-gray-700 text-white rounded bg-transparent outline-none"
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            addNewFolder(e);
-                        }
-                    }}
-                    required
-                />
+                        value={newFolder}
+                        onChange={(e) => setNewFolder(e.target.value)}
+                        placeholder="Folder name"
+                        className="w-full p-1 mb-4 border-gray-600 bg-gray-700 text-white rounded bg-transparent outline-none"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                addNewFolder(e);
+                            }
+                        }}
+                        required
+                    />
                 </div>
             )}
             {/* Retrive data from JSON file */}
             <ul className="space-y-1">
                 {folders.map(folder => (
                     <li
-                        key={folder.id}
+                        key={folder.id || folder._id}
                         onClick={() => setSelectedFolder(folder.id || folder._id)}
                         onDoubleClick={() => handleEditFolder(folder)}
                         className={`group flex items-center justify-between mb-3 py-2 rounded cursor-pointer px-4 transition-colors duration-150
@@ -255,12 +255,12 @@ export default function Folder({ folders, setFolders, setSelectedFolder, selecte
 
                         {/* Delete icon */}
                         <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteFolder(folder.id);
-                        }}
-                        className="hover:text-red-400"
-                        title="Delete"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteFolder(folder.id);
+                            }}
+                            className="hover:text-red-400"
+                            title="Delete"
                         >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
