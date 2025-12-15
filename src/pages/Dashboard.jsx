@@ -5,12 +5,14 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from '../components/Header';
 import NoteCard from '../components/NoteCard';
 import NoteList from '../components/NoteList';
+import UserInfo from "../components/UserInfo";
+import UserList from "../components/UserList";
+import UserSettings from "../components/UserSettings";
 import data from "../data/data.json";
 import Folder from '../sidebar/Folders';
 import MoreOptions from '../sidebar/MoreOptions';
 import Recents from '../sidebar/Recents';
 import User from "../sidebar/User";
-import UserList from "../components/UserList";
 
 export default function Dashboard() {
     const [selectedID, setSelectedID] = useState(null);
@@ -21,6 +23,7 @@ export default function Dashboard() {
     const [showArchive, setShowArchive] = useState(false);
     const [showDeletedNotes, setShowDeletedNotes] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
+    const [activeUserView, setActiveUserView] = useState(null);
 
     return (
         <div className="h-screen text-white">
@@ -64,9 +67,9 @@ export default function Dashboard() {
                     <User onClick={() => setShowUserList(prev => !prev)}/>
                 </div>
                 <div className="border-r border-gray-800 lg:overflow-y-auto bg-(--color--columnsBackground) p-5 min-w-0">
-                    <div className="p-4 top-0 z-10">
+                    <div className="p-1 top-0 z-10">
                         {showUserList ? (
-                            <UserList />
+                            <UserList setActiveUserView={setActiveUserView} />
                         ): (
                             <>
                             <h2 className="text-xl font-semibold">
@@ -95,14 +98,19 @@ export default function Dashboard() {
 
                 </div>
                 <div className="lg:overflow-y-auto p-8 min-w-0">
-                    <NoteCard
-                        selectedID={selectedID}
-                        setSelectedID={setSelectedID}
-                        setNotes={setNotes}
-                        notes={notes}
-                        folders={folders}
-                        setFolders={setFolders}
-                    />
+                    {activeUserView === "settings" && <UserSettings toast={toast} />}
+                    {activeUserView === "info" && <UserInfo toast={toast} />}
+                    {!activeUserView && (
+                        <NoteCard
+                            selectedID={selectedID}
+                            setSelectedID={setSelectedID}
+                            setNotes={setNotes}
+                            notes={notes}
+                            folders={folders}
+                            setFolders={setFolders}
+                        />
+                    )}
+
                 </div>
             </div>
         </div>
