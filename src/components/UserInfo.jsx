@@ -22,11 +22,11 @@ export default function UserInfo({ toast }) {
         try {
         setLoading(true);
 
-        const res = await axios.put(
+        const res = await axios.patch(
             "http://localhost:5000/api/user",
             {
-            gender: formData.gender,
-            phone: formData.phone,
+                gender: formData.gender,
+                phone: formData.phone,
             },
             {
             headers: {

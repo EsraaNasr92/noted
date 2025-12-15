@@ -12,7 +12,7 @@ router.post("/signup", signup);
 router.get("/user", auth ,getUser);
 
 // UPDATE current user
-router.put("/user", auth, async (req, res) => {
+router.patch("/user", auth, async (req, res) => {
     try {
         const { gender, phone } = req.body;
 
