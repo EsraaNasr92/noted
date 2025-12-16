@@ -12,7 +12,13 @@ const signup = async (req, res) => {
         if (userExists) return res.status(400).json({ message: "Email already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ name, email, password: hashedPassword });
+        const newUser = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            gender,
+            phone
+        });
 
         res.status(201).json({ message: "User created", user: { name: newUser.name, email: newUser.email } });
     } catch (err) {
