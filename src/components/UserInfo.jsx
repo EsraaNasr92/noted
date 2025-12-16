@@ -1,19 +1,30 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function UserInfo({ toast }) {
     const { user, token, setUser } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
-        name: user?.name || "",
-        email: user?.email || "",
-        gender: user?.gender || "",
-        phone: user?.phone || "",
+        name: "",
+        email: "",
+        gender: "",
+        phone: "",
     });
 
     const [loading, setLoading] = useState(false);
 
+    // Update formData when user data changes
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                name: user.name || "",
+                email: user.email || "",
+                gender: user.gender || "",
+                phone: user.phone || "",
+            });
+        }
+    }, [user]);
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -46,67 +57,67 @@ export default function UserInfo({ toast }) {
 
     return (
         <div className="max-w-xl space-y-6">
-        <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
-            User Information
-        </h2>
+            <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
+                User Information
+            </h2>
 
-        {/* Name */}
-        <div>
-            <label className="text-sm text-gray-400">Name</label>
-            <input
-            value={formData.name}
-            disabled
-            className="w-full px-4 py-2 rounded bg-gray-600 text-gray-300 cursor-not-allowed"
-            />
-        </div>
+            {/* Name */}
+            <div>
+                <label className="text-sm text-gray-400">Name</label>
+                <input
+                value={formData.name}
+                disabled
+                className="w-full px-4 py-2 rounded bg-gray-600 text-gray-300 cursor-not-allowed"
+                />
+            </div>
 
-        {/* Email */}
-        <div>
-            <label className="text-sm text-gray-400">Email</label>
-            <input
-            value={formData.email}
-            disabled
-            className="w-full px-4 py-2 rounded bg-gray-600 text-gray-300 cursor-not-allowed"
-            />
-        </div>
+            {/* Email */}
+            <div>
+                <label className="text-sm text-gray-400">Email</label>
+                <input
+                    value={formData.email}
+                    disabled
+                    className="w-full px-4 py-2 rounded bg-gray-600 text-gray-300 cursor-not-allowed"
+                />
+            </div>
 
-        {/* Gender */}
-        <div>
-            <label className="text-sm text-gray-400">Gender</label>
-            <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-            >
-            <option value="">Select</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            </select>
-        </div>
+            {/* Gender */}
+            <div>
+                <label className="text-sm text-gray-400">Gender</label>
+                <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
+                >
+                <option value="">Select</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                </select>
+            </div>
 
-        {/* Phone */}
-        <div>
-            <label className="text-sm text-gray-400">Phone</label>
-            <input
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="+20 1XXXXXXXXX"
-            className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-            />
-        </div>
+            {/* Phone */}
+            <div>
+                <label className="text-sm text-gray-400">Phone</label>
+                <input
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+20 1XXXXXXXXX"
+                    className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
 
-        {/* Save */}
-        <div className="flex justify-end">
-            <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="px-6 py-2 rounded bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-            >
-            {loading ? "Saving..." : "Save Information"}
-            </button>
-        </div>
+            {/* Save */}
+            <div className="flex justify-end">
+                <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="px-6 py-2 rounded bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                >
+                {loading ? "Saving..." : "Save Information"}
+                </button>
+            </div>
         </div>
     );
 }
