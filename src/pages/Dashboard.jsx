@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import FaqsDropdownList from "../components/FaqsDropdownList";
 import Header from '../components/Header';
 import NoteCard from '../components/NoteCard';
 import NoteList from '../components/NoteList';
@@ -100,6 +101,7 @@ export default function Dashboard() {
                 <div className="lg:overflow-y-auto p-8 min-w-0">
                     {activeUserView === "settings" && <UserSettings toast={toast} />}
                     {activeUserView === "info" && <UserInfo toast={toast} />}
+                    {activeUserView === "faqs" && <FaqsDropdownList toast={toast} />}
                     {!activeUserView && (
                         <NoteCard
                             selectedID={selectedID}
