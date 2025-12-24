@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { setAuthToken } from "../api/auth";
+import API_BASE from "../apiConfig";
 
 export const AuthContext = createContext();
 
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
         const fetchUser = async () => {
             if (!token) return;
             try {
-                const res = await axios.get("http://localhost:5000/api/user", {
+                const res = await axios.get(`${API_BASE}/api/user`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setUser(res.data); // full user with gender & phone

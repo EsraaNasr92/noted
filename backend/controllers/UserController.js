@@ -8,19 +8,30 @@ const JWT_SECRET = process.env.JWT_SECRET || "Secret_key";
 const signup = async (req, res) => {
     try {
         const { name, email, password } = req.body;
+
+        // Check if user already exists
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: "Email already exists" });
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user with only required fields
         const newUser = await User.create({
             name,
             email,
-            password: hashedPassword,
-            gender,
-            phone
+            password: hashedPassword
+            // gender, phone, etc. can be added later
         });
 
-        res.status(201).json({ message: "User created", user: { name: newUser.name, email: newUser.email } });
+        // Optionally, auto-login: generate JWT
+        const token = jwt.sign({ _id: newUser._id }, JWT_SECRET, { expiresIn: "7d" });
+
+        res.status(201).json({ 
+            message: "User created", 
+            token, 
+            user: { name: newUser.name, email: newUser.email, _id: newUser._id } 
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -37,12 +48,17 @@ const login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
 
         const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-        res.json({ message: "Login successful", token, user: { name: user.name, email: user.email, _id: user._id } });
+        res.json({ 
+            message: "Login successful", 
+            token, 
+            user: { name: user.name, email: user.email, _id: user._id } 
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
+// GET USER PROFILE
 const getUser = async (req, res) => {
     try {
         // req.userId should be set by auth middleware
