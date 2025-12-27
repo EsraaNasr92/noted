@@ -3,8 +3,17 @@ import API_BASE from "../apiConfig.js";
 import MarkdownEditor from './MarkdownEditor.jsx';
 
 // Card details based on based card ID from NoteList component "add state and props in App.jsx"
-export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, folders, setFolders }) {
-    const card = notes.find((c) => c.id === selectedID);
+export default function NoteCard({
+    activeTabId,
+    setActiveTabId,
+    openTabs,
+    setOpenTabs,
+    setNotes,
+    notes,
+    folders,
+    setFolders
+    }) {
+    const card = notes.find((c) => c.id === activeTabId);
     const folder = folders.find((f) => f.id === card?.folder);
 
     useEffect(() => {
@@ -40,10 +49,9 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
     }, []);
 
     useEffect(() => {
-
-        console.log("Selected ID:", selectedID);
+        console.log("Active Tab ID:", activeTabId);
         console.log("Card found:", card);
-    }, [selectedID, card]);
+    }, [activeTabId, card]);
 
     const [showOptions, setShowOptions] = useState(false);
     const dropdownRef = useRef(null);
@@ -85,7 +93,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    if (!selectedID) return (
+/*     if (!activeTabId) return (
         <div className="flex flex-col items-center justify-center h-full text-center">
             <svg className="w-25 h-25 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
@@ -93,7 +101,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
             <h1 className='text-[28px] font-semibold mb-2 text-white'>Select a note to view</h1>
             <p className='text-[20px] text-[var(--color-textSecondary)]'>Choose a note from the list on the left to view its contents, or create a <br /> new note to add to your collection.</p>
         </div>
-    );
+    ); */
 
     if (!card) return <p>Note not found</p>;
 
@@ -106,7 +114,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         }
 
         try {
-            const response = await fetch(`${API_BASE}/api/notes/${selectedID}/edit`, {
+            const response = await fetch(`${API_BASE}/api/notes/${activeTabId}/edit`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(fields), // send directly, not wrapped
@@ -117,7 +125,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
             if (!response.ok) throw new Error(data.message || "Failed to edit note");
 
             const updatedNotes = notes.map((note) =>
-                note.id === selectedID ? { ...note, ...data.note } : note
+                note.id === activeTabId ? { ...note, ...data.note } : note
             );
             setNotes(updatedNotes);
 
@@ -138,7 +146,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         const updatedValue = !card.isFavorite;
 
         try {
-            const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
+            const response = await fetch(`${API_BASE}/api/notes/${activeTabId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ isFavorite: updatedValue }),
@@ -148,7 +156,7 @@ export default function NoteCard({ selectedID, setSelectedID, setNotes, notes, f
         const updatedNote = await response.json();
 
         const updatedNotes = notes.map(note =>
-            note.id === selectedID
+            note.id === activeTabId
             ?{ ...note, isFavorite: updatedValue } // Toggle
             :note
         );
@@ -169,7 +177,7 @@ const handleAddToArchive = async () => {
     const updatedValue = !card.isArchive;
 
     try {
-        const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
+        const response = await fetch(`${API_BASE}/api/notes/${activeTabId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isArchive: updatedValue }),
@@ -180,7 +188,7 @@ const handleAddToArchive = async () => {
         const updatedNote = await response.json();
 
         const updatedNotes = notes.map((note) =>
-        note.id === selectedID ? { ...note, ...updatedNote } : note
+        note.id === activeTabId ? { ...note, ...updatedNote } : note
         );
 
         setNotes(updatedNotes);
@@ -201,7 +209,7 @@ const handleAddToArchive = async () => {
 
         try {
             // Mark as deleted (don't remove from database)
-            const response = await fetch(`${API_BASE}/api/notes/${selectedID}`, {
+            const response = await fetch(`${API_BASE}/api/notes/${activeTabId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json "},
                 body: JSON.stringify({
@@ -217,7 +225,7 @@ const handleAddToArchive = async () => {
 
             // Update local state
             const updatedNotes = notes.map(note =>
-                note.id === selectedID ? { ...note, ...updatedNote } : note
+                note.id === activeTabId ? { ...note, ...updatedNote } : note
             );
             setNotes(updatedNotes);
             localStorage.setItem("notes", JSON.stringify(updatedNotes));
@@ -381,11 +389,6 @@ const handleAddToArchive = async () => {
                                 <input
                                     type="date"
                                     value={editableDate ? editableDate.split("T")[0]: ""}
-/*                                     onChange={(e) => {
-                                        const newValue = e.target.value;
-                                        setEditableDate(newValue);
-                                        saveDate(newValue);
-                                    }} */
                                     onChange={(e) => setEditableDate(e.target.value)}
                                     onBlur={() => saveDate()}
                                     onKeyDown={(e) => {
@@ -465,8 +468,8 @@ const handleAddToArchive = async () => {
             </div>
 
             <MarkdownEditor
-                setSelectedID={setSelectedID}
-                selectedID={selectedID}
+                //setSelectedID={setSelectedID}
+                selectedID={activeTabId}
                 notes={notes}
                 setNotes={setNotes}
             />

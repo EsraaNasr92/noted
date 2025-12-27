@@ -2,14 +2,18 @@ import { useEffect, useState } from 'react';
 import API_BASE from "../apiConfig.js";
 // List of notes in the middle section
 export default function NoteList({
-    selectedID,
-    setSelectedID,
+    openNotes,
     notes,
     setNotes ,
     selectedFolder,
     showFavorites,
     showArchive,
-    showDeletedNotes
+    showDeletedNotes,
+    activeTabId,
+    setActiveTabId,
+    openTabs,
+    setOpenTabs,
+
     }) {
     
     const [openMenuId, setOpenMenuId] = useState(null); // Dropdown menu for the delete options
@@ -128,11 +132,11 @@ export default function NoteList({
                             <div
                                 key={card.id}
                                 className={`relative p-5 mb-5 transition-colors duration-150 rounded-lg cursor-pointer ${
-                                    selectedID === card.id
+                                    activeTabId === card.id
                                         ? "bg-[var(--color-cardsActiveBackground)] text-white"
                                         : "bg-[var(--color-cardsBackground)] text-white hover:bg-[var(--color-secondaryBackgroundHover)]"
                                 }`}
-                                onClick={() => !showDeletedNotes && setSelectedID(card.id)} // disable opening in Trash
+                                onClick={() => !showDeletedNotes && openNotes(card.id)} // disable opening in Trash
                             >
                                 <h3 className="font-semibold mb-3">{card.title}</h3>
                                 <p className="text-gray-400 truncate">

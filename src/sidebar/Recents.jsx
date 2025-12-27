@@ -1,4 +1,4 @@
-export default function Recents({ notes, setSelectedID }){
+export default function Recents({ notes, openNotes }){
     // Filter out deleted notes
     const activeNotes = notes.filter(note => !note.isDeleted);
 
@@ -20,7 +20,7 @@ export default function Recents({ notes, setSelectedID }){
                     {recentNotes.map(note => (
                         <div
                             key={note.id}
-                            onClick={() => setSelectedID(note.id)}
+                            onClick={() => openNotes(note.id)}
                             className="flex items-center gap-2 mb-1 py-1 text-gray-400 hover:bg-gray-700 w-full cursor-pointer px-4"
                         >
                             <svg className="w-6 h-6 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
