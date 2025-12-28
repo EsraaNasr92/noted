@@ -54,3 +54,7 @@ li, h3, .nav-items{
 .card p span{
     color: rgb(255, 255, 255, 0.4);
 }
+.tab.pinned {
+    font-weight: 600;
+    background-color: #1f2937;
+}

@@ -1,5 +1,5 @@
 // pages/Dashboard.jsx
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import FaqsDropdownList from "../components/FaqsDropdownList";
@@ -60,6 +60,15 @@ export default function Dashboard() {
         }
     });
 
+    // Keep the pinned notes after refreshing
+    const [pinNote, setPinNote] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem("pinnedNotes")) || []
+        } catch{
+            return [];
+        }
+    });
+
     // Persist tabs
     useEffect(() => {
         localStorage.setItem("openTabs", JSON.stringify(openTabs));
@@ -87,6 +96,36 @@ export default function Dashboard() {
         setOpenTabs(prev => prev.includes(noteId) ? prev : [...prev, noteId]);
         setActiveTabId(noteId);
     }
+
+    // Toggle to pin/unpin the note
+    const togglePin = (noteId) => {
+        setPinNote(prev => {
+            // unpin if already pinned
+            if(prev.includes(noteId)){
+                return prev.filter(id => id !== noteId);
+            }
+
+            if(prev.length >= 2){
+                toast.warning("You can pin only 2 notes");
+                return prev;
+            }
+            return [...prev, noteId];
+        });
+    }
+
+    // Persist pinned notes on change
+    useEffect(() => {
+        localStorage.setItem("pinnedNotes", JSON.stringify(pinNote));
+    }, [pinNote])
+
+    // Clean pinned notes if note is deleted
+    useEffect(() => {
+        setPinNote(prev =>
+            prev.filter(id =>
+                notes.some(note => note.id.toString() === id.toString())
+            )
+        );
+    }, [notes]);
 
     return (
         <div className="h-screen text-white">
@@ -166,6 +205,8 @@ export default function Dashboard() {
                             activeTabId={activeTabId}
                             setActiveTabId={setActiveTabId}
                             notes={notes}
+                            pinNote={pinNote}
+                            togglePin={togglePin}
                         />
                     )}
 

@@ -2,8 +2,8 @@
     "faqs": [
         {
             "id": 1,
-            "question": "Question 1",
-            "answer": "Answer 1"
+            "question": "Can I pin the notes?",
+            "answer": "Yes, you can pin notes by right-clicking on a tab and you will get the pin icon. Please note that you can pin up to 2 notes only."
         },
         {
             "id": 2,
